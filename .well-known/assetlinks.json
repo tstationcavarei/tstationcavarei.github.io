@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.tstationcavarei.twa",
+        "sha256_cert_fingerprints": ["D0:1D:35:C1:CE:4C:0D:0D:33:2D:3E:B7:6D:21:95:41:F2:64:FF:9E:F5:73:C4:0B:0B:54:87:A9:0C:55:BE:9E"]
+      }
+    }]
