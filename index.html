@@ -10,7 +10,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>Agenda Visiva</title>
+<title>Visual Schedule</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -79,6 +79,13 @@ input,textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:d
   box-shadow:0 1px 6px rgba(0,0,0,.06);
 }
 .tb-logo{font-size:1.05rem;font-weight:900;color:var(--acc);}
+.lang-pick-btn{
+  background:var(--card);border:2px solid var(--brd);border-radius:12px;
+  padding:14px 22px;font-family:inherit;font-weight:800;font-size:.95rem;
+  color:var(--txt);cursor:pointer;min-width:140px;
+  transition:border-color .15s,transform .15s;
+}
+.lang-pick-btn:active{border-color:var(--acc);transform:scale(.96);}
 .upd-banner{
   background:var(--grn);color:#fff;font-weight:800;font-size:.8rem;
   text-align:center;padding:8px 12px;cursor:pointer;
@@ -1047,33 +1054,41 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <body>
 <div id="stage">
 
-<!-- HOME -->
+<!-- LANGUAGE PICKER (first launch) -->
+<div class="scr" id="s-lang">
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;">
+    <div style="font-size:2.4rem;">🌐</div>
+    <div style="font-size:1.15rem;font-weight:900;color:var(--txt);text-align:center;" id="lang-pick-ttl">Scegli la lingua / Choose your language</div>
+    <div id="lang-pick-grid" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:600px;"></div>
+    <div style="font-size:.72rem;color:var(--mut);text-align:center;max-width:400px;" id="lang-pick-desc">Potrai cambiarla in qualsiasi momento dalle Impostazioni. / You can change it any time from Settings.</div>
+  </div>
+</div>
 <div class="scr on" id="s-home">
   <div class="tbar">
-    <div class="tb-logo">Agenda <span>Visiva</span></div>
+    <div class="tb-logo" id="app-title-logo">Agenda <span>Visiva</span></div>
     <div class="spacer"></div>
-    <button class="ib" onclick="toggleInstr()" title="Istruzioni">ℹ️</button>
-    <button class="ib" id="lock-btn" onclick="onLockIconTap()" title="Blocco impostazioni">🔓</button>
+    <button class="ib" onclick="toggleInstr()" title="Istruzioni" data-i18n-title="instr">ℹ️</button>
+    <button class="ib" id="lock-btn" onclick="onLockIconTap()" title="Blocco impostazioni" data-i18n-title="lockSettings">🔓</button>
     <button class="ib" onclick="goSettings(this)">⚙️</button>
   </div>
-  <div class="upd-banner hidden" id="home-upd-banner" onclick="goToUpdateSettings()">✅ Nuova versione disponibile — tocca per installare</div>
+  <div class="upd-banner hidden" id="home-upd-banner" onclick="goToUpdateSettings()" data-i18n="updAvailable">✅ Nuova versione disponibile — tocca per installare</div>
   <div class="body body-main">
     <div class="hc-big" onclick="goUse()">
       <div class="hc-big-i">▶️</div>
-      <div class="hc-big-t">Usa Agenda</div>
-      <div class="hc-big-d">Avvia la sessione</div>
+      <div class="hc-big-t" data-i18n="useAgenda">Usa Agenda</div>
+      <div class="hc-big-d" data-i18n="startSession">Avvia la sessione</div>
       <div class="hc-big-b" id="hb-s">–</div>
     </div>
   </div>
   <div class="mini-row">
     <button class="mini-btn mb-users" onclick="goUsers(this)">
       <span class="mini-i">👤</span>
-      <span class="mini-t">Utenti</span>
+      <span class="mini-t" data-i18n="users">Utenti</span>
       <span class="mini-b" id="hb-u">–</span>
     </button>
     <button class="mini-btn mb-ag" onclick="goAg(this)">
       <span class="mini-i">📋</span>
-      <span class="mini-t">Agende</span>
+      <span class="mini-t" data-i18n="agendas"></span>
       <span class="mini-b" id="hb-a">–</span>
     </button>
   </div>
@@ -1081,73 +1096,20 @@ html[data-tablet=on][data-theme=dark] .vctrl{
   <!-- Full-page instructions overlay — opens on top of the whole stage for comfortable reading -->
   <div class="instr-ov" id="instr-ov">
     <div class="instr-ov-h">
-      <div class="instr-ov-t"><span>📖</span><span>Istruzioni</span></div>
-      <button class="instr-ov-close" onclick="toggleInstr()">✕ Chiudi</button>
+      <div class="instr-ov-t"><span>📖</span><span data-i18n="instr">Istruzioni</span></div>
+      <button class="instr-ov-close" onclick="toggleInstr()">✕ <span data-i18n="close">Chiudi</span></button>
     </div>
-    <div class="instr-body" id="instr-body">
-      <div class="instr-sect">
-        <div class="instr-sect-t">🏠 Home</div>
-        <p>In alto a destra: <b>ℹ️ Info</b> (queste istruzioni), <b>🔓/🔒 Lucchetto</b> (blocco con password), <b>⚙️ Impostazioni</b>. L'app resta sempre a schermo intero, senza bisogno di attivarlo manualmente.</p>
-        <p>Al centro, il grande pulsante verde <b>▶️ Usa Agenda</b> avvia subito una sessione. Sotto, due pulsanti più piccoli portano a <b>👤 Utenti</b> e <b>📋 Agende</b>, dove si creano e modificano i profili e le loro agende. Se l'app è installata, tenendo premuta la sua icona compare una scorciatoia "Usa Agenda" che salta direttamente all'avvio della sessione.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">👤 Utenti</div>
-        <p>Crea un profilo per ogni persona che userà l'agenda, con nome e colore identificativo. Sulla card: <b>📋</b> Agende, <b>✏️</b> Modifica, <b>🗑</b> Elimina (con conferma — elimina anche tutte le sue agende).</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">📋 Agende</div>
-        <p>Seleziona un utente a sinistra per vedere o creare le sue agende (es. "Lunedì", "Routine mattutina"). Accanto al nome: <b>✎</b> Rinomina. In basso: <b>📂</b> Modifica (apre l'editor degli step), <b>⧉</b> Duplica (copia l'agenda intera con tutti gli step), <b>🎨</b> Sfondo, <b>🗑</b> Elimina.</p>
-        <p><b>🎨 Sfondo</b>: si vede durante l'uso dell'agenda, dietro alle attività (che restano sempre ben visibili sopra). Si sceglie tra neutro, alcuni preset con texture realistica (sughero, tappeto verde da biliardo, lavagna consumata, colori tenui) o una foto dalla galleria; l'anteprima mostra subito il risultato. La spunta "Sfoca lo sfondo" attenua i dettagli, con una barra per regolarne l'intensità — utile se lo sfondo scelto è troppo ricco e rischia di distrarre. C'è anche una scelta del <b>colore del testo</b> per le etichette che stanno fuori dalle immagini (es. il nome sotto le miniature), per restare leggibili su qualsiasi sfondo. Tutto si conferma con <b>💾 Salva</b>.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">✏️ Editor degli step</div>
-        <p>Vista a griglia con tutte le attività dell'agenda come tessere numerate. Tocca <b>＋</b> per aggiungerne una, tocca una tessera per modificarla. Su ogni tessera: <b>✕</b> Elimina, <b>⧉</b> Duplica, <b>⠿</b> per trascinare e riordinare.</p>
-        <p>Nel form di modifica: il <b>nome</b> (max 40 caratteri), la <b>modalità</b> — 🖼️ solo immagine, 📝 solo testo grande (per un'agenda testuale invece che visiva), oppure 🖼️+📝 entrambe — con anteprima dal vivo. L'immagine si carica dal dispositivo o si cerca su ARASAAC. Il <b>timer</b> ha durata in ore/minuti/secondi, quattro stili (anello, digitale, barra, cerchio) e l'opzione "auto-avanza" per passare da solo allo step successivo a tempo scaduto.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">▶️ Usa Agenda</div>
-        <p>Il grande pulsante verde in Home avvia subito una sessione. Se c'è <b>un solo utente con una sola agenda</b> in tutta l'app, parte tutto in automatico; altrimenti si apre una schermata per scegliere utente e agenda (e se un utente ha una sola agenda, quella si seleziona da sola). Premi il pulsante ▶ verde per iniziare davvero.</p>
-        <p>Durante l'uso, l'attività attuale appare grande al centro con bordo verde; le successive scorrono in una striscia in alto. Si avanza toccando l'immagine attuale, oppure la tessera successiva nella striscia.</p>
-        <p>Se un'attività ha un <b>timer</b>, appare in un pannello a destra. Mentre è in corso, un tocco normale su Avanti/Indietro non funziona (il pannello lampeggia in blu) — si può comunque forzare l'avanzamento tenendo premuto 2 secondi. Al termine del tempo suona un allarme, il pannello lampeggia in verde e compare "AVANTI" (o "FINE" sull'ultimo step) per proseguire.</p>
-        <p>In fondo: <b>✕ Chiudi</b>, <b>◀ Indietro</b>, <b>↺ Ripristina</b>, <b>Avanti ▶</b>. Chiudi, Ripristina, e Avanti/Indietro quando bloccati da un timer, richiedono una pressione continua di <b>2 secondi</b> — una protezione contro i tocchi accidentali, con un effetto visivo mentre li tieni premuti.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">✏️ Modifica provvisoria</div>
-        <p>In alto durante l'utilizzo, l'icona <b>✏️</b> (tienila premuta 2 secondi) attiva delle modifiche rapide senza mai cambiare schermata: sopra l'attività attuale e ogni tessera successiva compaiono <b>✏️</b> Modifica, <b>⧉</b> Duplica, <b>✕</b> Elimina, <b>⠿</b> per riordinare, più un riquadro <b>＋</b> per aggiungerne una nuova. Toccando ✏️ su una tessera si apre lo stesso form usato in creazione (nome, modalità, immagine o timer) da confermare con <b>✅ Fatto</b>.</p>
-        <p>Queste modifiche valgono <b>solo per la sessione in corso</b> e si sommano finché resti dentro: l'agenda salvata non cambia mai, e tutto torna come prima uscendo e riaprendola. Le attività già completate non sono modificabili da qui. Se l'attività attuale ha un timer in corso, all'apertura ti verrà chiesto se farlo continuare o metterlo in pausa (riprende da dove si era fermato); modificando invece proprio quel timer, il nuovo valore si applica subito. Per uscire dalla modalità modifica, tocca <b>✅ Fatto</b> al posto di ✏️ — un tocco normale, senza bisogno di tenerlo premuto.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">🔒 Blocco con password</div>
-        <p>Il lucchetto in alto attiva o disattiva un blocco a password per Utenti, Agende e Impostazioni — utile contro modifiche accidentali. Password predefinita: <b>ADMIN</b>, cambiabile in Impostazioni → 🔒 Sicurezza. Quando il blocco è attivo, toccare un'area bloccata non chiede nulla: pulsante e lucchetto pulsano in rosso. L'unico modo per entrare, o per disattivare il blocco, è toccare il lucchetto e inserire la password lì.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">⚙️ Impostazioni</div>
-        <p><b>Aspetto</b>: tema chiaro/scuro, 6 colori accento, e "Modalità tablet" per un'interfaccia più grande adatta a schermi grandi.</p>
-        <p><b>Suono</b>: tipo di suoneria di fine timer (Bip classico, Campanella, Carillon, Alert) e durata, con pulsante di prova. Nella stessa scheda, il <b>feedback aptico</b>: intensità della vibrazione ad ogni pressione di un pulsante, da "Disattivata" a "Forte" — funziona su tutti i pulsanti dell'app, sia in modalità telefono che tablet.</p>
-        <p><b>Sicurezza</b>: qui si cambia la password del blocco — richiede quella attuale più la nuova, ripetuta due volte per conferma.</p>
-        <p><b>Dati</b>: esporta/importa un backup completo, oppure cancella tutto.</p>
-        <p><b>Info</b>: versione installata e controllo aggiornamenti — l'app controlla automaticamente anche all'avvio, e se ne trova uno mostra un banner verde in Home per installarlo con un tocco.</p>
-      </div>
-      <div class="instr-sect">
-        <div class="instr-sect-t">🔐 Bloccare il tablet solo su questa app</div>
-        <p>Il blocco con password protegge le impostazioni <i>dentro</i> l'app, ma non impedisce di uscire e usare il tablet per altro. Per impedirlo davvero serve una funzione del sistema operativo, di solito chiamata <b>"Fissa app"</b> o <b>"App pinning"</b> — gratuita e già presente su ogni tablet Android o iPad.</p>
-        <p>Una volta attivata, il tablet mostra <b>solo</b> questa app: niente tasto Home, niente altre app o notifiche; per uscire serve un PIN scelto da te. Il percorso cambia da marca a marca; esempio (Samsung, One UI 6.1):</p>
-        <p><b>1)</b> Impostazioni → Sicurezza → Altre impostazioni di sicurezza → attiva "Aggiungi applicazione" sotto "Trust agent".<br>
-        <b>2)</b> Apri le app recenti, tocca l'icona di Agenda Visiva e premi "Aggiungi applicazione".<br>
-        <b>3)</b> Da quel momento il tablet resta bloccato su questa app; per sbloccarlo premi insieme "App recenti" e "Indietro".</p>
-        <p>Se il tuo tablet non mostra questa voce, cerca "fissa" o "pin" nelle Impostazioni: quasi tutti i produttori hanno una funzione equivalente.</p>
-      </div>
-    </div>
+    <div class="instr-body" id="instr-body"></div>
   </div>
-  <div class="home-ver" id="tb-ver">v3.1.0</div>
+  <div class="home-ver" id="tb-ver">v3.3.0</div>
 </div>
 
 <!-- USERS -->
 <div class="scr" id="s-users">
   <div class="tbar">
-    <button class="bk" onclick="go('s-home')">← Home</button>
-    <div class="tb-ttl">👤 Utenti</div>
-    <button class="badd" onclick="openAddUser()">+ Nuovo</button>
+    <button class="bk" onclick="go('s-home')" data-i18n="backHome">← Home</button>
+    <div class="tb-ttl">👤 <span data-i18n="users">Utenti</span></div>
+    <button class="badd" onclick="openAddUser()"><span data-i18n="new">+ Nuovo</span></button>
   </div>
   <div class="grid" id="u-grid"></div>
 </div>
@@ -1155,18 +1117,18 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <!-- AGENDAS -->
 <div class="scr" id="s-ag">
   <div class="tbar">
-    <button class="bk" onclick="go('s-home')">← Home</button>
-    <div class="tb-ttl">📋 Agende</div>
+    <button class="bk" onclick="go('s-home')" data-i18n="backHome">← Home</button>
+    <div class="tb-ttl">📋 <span data-i18n="agendas">Agende</span></div>
   </div>
   <div class="two">
     <div class="colL">
-      <div class="colL-h">👤 Utenti</div>
+      <div class="colL-h">👤 <span data-i18n="users">Utenti</span></div>
       <div class="colL-list" id="ag-ul"></div>
     </div>
     <div class="colR">
       <div class="colR-h">
         <div class="colR-t" id="ag-t">Seleziona un utente</div>
-        <button class="badd hidden" id="ag-add" onclick="openAddAgenda()">+ Nuova</button>
+        <button class="badd hidden" id="ag-add" onclick="openAddAgenda()"><span data-i18n="newF">+ Nuova</span></button>
       </div>
       <div class="grid" id="ag-grid"><div class="empty"><div class="empty-i">👈</div><div class="empty-t">Seleziona un utente</div></div></div>
     </div>
@@ -1176,17 +1138,17 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <!-- EDITOR -->
 <div class="scr" id="s-ed">
   <div class="tbar">
-    <button class="bk" onclick="edBack()">← Agende</button>
-    <div class="tb-ttl" id="ed-t">Editor</div>
+    <button class="bk" onclick="edBack()">← <span data-i18n="agendas">Agende</span></button>
+    <div class="tb-ttl" id="ed-t" data-i18n="editorTitle">Editor</div>
   </div>
   <div class="eg hidden" id="ed-grid"></div>
   <div class="ev hidden" id="ed-ev">
     <div class="mini" id="ed-mini"></div>
     <div class="ef" id="ed-f"></div>
     <div class="ebar">
-      <button class="bsave" onclick="saveStep()">💾 Salva</button>
+      <button class="bsave" onclick="saveStep()">💾 <span data-i18n="save">Salva</span></button>
       <span class="sst" id="ed-st"></span>
-      <button class="blist" onclick="exitEdit()">← Lista</button>
+      <button class="blist" onclick="exitEdit()">← <span data-i18n="list">Lista</span></button>
     </div>
   </div>
 </div>
@@ -1194,21 +1156,21 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <!-- USE -->
 <div class="scr" id="s-use">
   <div class="tbar">
-    <button class="bk" onclick="go('s-home')">← Home</button>
-    <div class="tb-ttl">▶️ Usa Agenda</div>
+    <button class="bk" onclick="go('s-home')" data-i18n="backHome">← Home</button>
+    <div class="tb-ttl">▶️ <span data-i18n="useAgenda">Usa Agenda</span></div>
   </div>
   <div class="body">
     <div class="ubox">
-      <div class="ubox-t">🎯 Scegli l'agenda</div>
-      <div class="fg" id="use-u-fg"><label class="fl">Utente</label>
-        <div class="xsel" id="use-u" data-val="" data-label="Scegli utente" onclick="xSelOpen(this,useUOpts,v=>{el('use-u').dataset.val=v;useSyncU();useFillA();})">
-          <span id="use-u-txt">— Utente —</span><span class="xsel-arrow">▾</span>
+      <div class="ubox-t">🎯 <span data-i18n="chooseSchedule">Scegli l'agenda</span></div>
+      <div class="fg" id="use-u-fg"><label class="fl" data-i18n="users">Utente</label>
+        <div class="xsel" id="use-u" data-val="" data-i18n-label="selectUserLabel" onclick="xSelOpen(this,useUOpts,v=>{el('use-u').dataset.val=v;useSyncU();useFillA();})">
+          <span id="use-u-txt">— <span data-i18n="userSing">Utente</span> —</span><span class="xsel-arrow">▾</span>
         </div></div>
-      <div class="fg" id="use-a-fg"><label class="fl">Agenda</label>
-        <div class="xsel" id="use-a" data-val="" data-label="Scegli agenda" onclick="xSelOpen(this,useAOpts,v=>{el('use-a').dataset.val=v;useSyncA();useChk();})">
-          <span id="use-a-txt">— Agenda —</span><span class="xsel-arrow">▾</span>
+      <div class="fg" id="use-a-fg"><label class="fl" data-i18n="agendas">Agenda</label>
+        <div class="xsel" id="use-a" data-val="" data-i18n-label="selectAgendaLabel" onclick="xSelOpen(this,useAOpts,v=>{el('use-a').dataset.val=v;useSyncA();useChk();})">
+          <span id="use-a-txt">— <span data-i18n="agendaSing">Agenda</span> —</span><span class="xsel-arrow">▾</span>
         </div></div>
-      <button class="bstart" id="use-go" onclick="startViewer()" disabled>▶️ Avvia</button>
+      <button class="bstart" id="use-go" onclick="startViewer()" disabled>▶️ <span data-i18n="startBtn">Avvia</span></button>
     </div>
   </div>
 </div>
@@ -1217,10 +1179,10 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <div class="scr" id="s-view">
   <div id="v-bg-layer"></div>
   <div class="tbar">
-    <button class="bk hold-btn" data-hold="stop">✕ Esci</button>
+    <button class="bk hold-btn" data-hold="stop">✕ <span data-i18n="exit">Esci</span></button>
     <div class="tb-ttl" id="v-t">Agenda</div>
-    <button class="ib hold-btn" id="v-edit-start-btn" data-hold="tempedit" title="Modifica provvisoria (solo questa sessione)">✏️</button>
-    <button class="bk hidden" id="v-editdone" onclick="exitViewEdit()" style="background:var(--grn);color:#fff;border-color:var(--grn-d)" title="Termina modifica">✅ Fatto</button>
+    <button class="ib hold-btn" id="v-edit-start-btn" data-hold="tempedit" title="Modifica provvisoria (solo questa sessione)" data-i18n-title="tempEditTitle">✏️</button>
+    <button class="bk hidden" id="v-editdone" onclick="exitViewEdit()" style="background:var(--grn);color:#fff;border-color:var(--grn-d)" title="Termina modifica" data-i18n-title="endEdit">✅ <span data-i18n="done">Fatto</span></button>
   </div>
   <!-- launch -->
   <div class="vl hidden" id="v-launch">
@@ -1282,10 +1244,10 @@ html[data-tablet=on][data-theme=dark] .vctrl{
       </div>
     </div>
     <div class="vctrl">
-      <button class="cb st hold-btn" data-hold="stop">✕ Chiudi</button>
-      <button class="cb pv hold-btn" id="v-prev" data-dir="prev">◀ Indietro</button>
-      <button class="cb rs hold-btn" data-hold="reset">↺ Ripristina</button>
-      <button class="cb nx hold-btn" id="v-next" data-dir="next">Avanti ▶</button>
+      <button class="cb st hold-btn" data-hold="stop">✕ <span data-i18n="close">Chiudi</span></button>
+      <button class="cb pv hold-btn" id="v-prev" data-dir="prev">◀ <span data-i18n="back">Indietro</span></button>
+      <button class="cb rs hold-btn" data-hold="reset">↺ <span data-i18n="reset">Ripristina</span></button>
+      <button class="cb nx hold-btn" id="v-next" data-dir="next"><span data-i18n="next">Avanti</span> ▶</button>
     </div>
   </div>
 </div>
@@ -1293,30 +1255,34 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <!-- SETTINGS -->
 <div class="scr" id="s-set">
   <div class="tbar">
-    <button class="bk" onclick="go('s-home')">← Home</button>
-    <div class="tb-ttl">⚙️ Impostazioni</div>
+    <button class="bk" onclick="go('s-home')" data-i18n="backHome">← Home</button>
+    <div class="tb-ttl">⚙️ <span data-i18n="settings">Impostazioni</span></div>
   </div>
   <div class="tabs">
-    <button class="tab on" data-p="p-look" onclick="swTab(this)">🎨 Aspetto</button>
-    <button class="tab" data-p="p-snd" onclick="swTab(this)">🔔 Suono</button>
-    <button class="tab" data-p="p-sec" onclick="swTab(this)">🔒 Sicurezza</button>
-    <button class="tab" data-p="p-data" onclick="swTab(this)">💾 Dati</button>
-    <button class="tab" data-p="p-info" onclick="swTab(this)">ℹ️ Info</button>
+    <button class="tab on" data-p="p-look" onclick="swTab(this)">🎨 <span data-i18n="appearance">Aspetto</span></button>
+    <button class="tab" data-p="p-snd" onclick="swTab(this)">🔔 <span data-i18n="sound">Suono</span></button>
+    <button class="tab" data-p="p-sec" onclick="swTab(this)">🔒 <span data-i18n="security">Sicurezza</span></button>
+    <button class="tab" data-p="p-data" onclick="swTab(this)">💾 <span data-i18n="data">Dati</span></button>
+    <button class="tab" data-p="p-info" onclick="swTab(this)">ℹ️ <span data-i18n="info">Info</span></button>
   </div>
   <div class="panes">
     <div class="pane on" id="p-look">
       <div class="sect">
-        <div class="sect-t">🌗 Tema</div>
-        <div class="srow"><div class="slbl">Modalità</div>
+        <div class="sect-t">🌐 <span data-i18n="language">Lingua</span></div>
+        <div class="srow" style="flex-wrap:wrap;gap:7px;" id="lang-set-row"></div>
+      </div>
+      <div class="sect">
+        <div class="sect-t">🌗 <span data-i18n="theme">Tema</span></div>
+        <div class="srow"><div class="slbl" data-i18n="mode">Modalità</div>
           <div style="display:flex;gap:7px">
-            <button class="ba" id="b-lt" onclick="setTheme('light')">☀️ Chiara</button>
-            <button class="ba off" id="b-dk" onclick="setTheme('dark')">🌙 Scura</button>
+            <button class="ba" id="b-lt" onclick="setTheme('light')">☀️ <span data-i18n="light">Chiara</span></button>
+            <button class="ba off" id="b-dk" onclick="setTheme('dark')">🌙 <span data-i18n="dark">Scura</span></button>
           </div>
         </div>
       </div>
       <div class="sect">
-        <div class="sect-t">🎨 Colore</div>
-        <div class="srow"><div class="slbl">Accent</div>
+        <div class="sect-t">🎨 <span data-i18n="color">Colore</span></div>
+        <div class="srow"><div class="slbl" data-i18n="accent">Accent</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap" id="accs">
             <div class="sw" data-a="blue" style="background:#4A9EDB" onclick="setAcc('blue')"></div>
             <div class="sw" data-a="purple" style="background:#9B5DE5" onclick="setAcc('purple')"></div>
@@ -1328,67 +1294,67 @@ html[data-tablet=on][data-theme=dark] .vctrl{
         </div>
       </div>
       <div class="sect">
-        <div class="sect-t">📟 Dispositivo</div>
-        <div class="srow"><div><div class="slbl">Modalità tablet</div><div class="ssub">Interfaccia più grande, tastiera di sistema, più spazio per le attività successive</div></div>
+        <div class="sect-t">📟 <span data-i18n="device2">Dispositivo</span></div>
+        <div class="srow"><div><div class="slbl" data-i18n="tabletMode">Modalità tablet</div><div class="ssub" data-i18n="tabletModeDesc">Interfaccia più grande, tastiera di sistema, più spazio per le attività successive</div></div>
           <div class="tog" id="tablet-tog" onclick="toggleTablet()"></div>
         </div>
       </div>
     </div>
     <div class="pane" id="p-snd">
       <div class="sect">
-        <div class="sect-t">🔔 Suoneria</div>
-        <div class="srow"><div class="slbl">Tipo</div>
-          <div class="ssel2" id="s-rt" data-val="beep" data-label="Suoneria" onclick="xSelOpen(this,rtOpts,v=>{el('s-rt').dataset.val=v;set('s-rt-txt',rtLabel(v));saveSnd();})">
+        <div class="sect-t">🔔 <span data-i18n="ringtone">Suoneria</span></div>
+        <div class="srow"><div class="slbl" data-i18n="type">Tipo</div>
+          <div class="ssel2" id="s-rt" data-val="beep" data-i18n-label="ringtone" onclick="xSelOpen(this,rtOpts,v=>{el('s-rt').dataset.val=v;set('s-rt-txt',rtLabel(v));saveSnd();})">
             <span id="s-rt-txt">Bip classico</span><span class="xsel-arrow">▾</span>
           </div></div>
-        <div class="srow"><div class="slbl">Durata</div>
-          <div class="ssel2" id="s-sd" data-val="2" data-label="Durata suono" onclick="xSelOpen(this,sdOpts,v=>{el('s-sd').dataset.val=v;set('s-sd-txt',v+'s');saveSnd();})">
+        <div class="srow"><div class="slbl" data-i18n="duration">Durata</div>
+          <div class="ssel2" id="s-sd" data-val="2" data-i18n-label="soundDuration" onclick="xSelOpen(this,sdOpts,v=>{el('s-sd').dataset.val=v;set('s-sd-txt',v+'s');saveSnd();})">
             <span id="s-sd-txt">2s</span><span class="xsel-arrow">▾</span>
           </div></div>
-        <div class="srow"><div class="slbl">Test</div><button class="ba" onclick="playAlarm()">▶ Prova</button></div>
+        <div class="srow"><div class="slbl" data-i18n="test">Test</div><button class="ba" onclick="playAlarm()">▶ <span data-i18n="test">Prova</span></button></div>
       </div>
       <div class="sect">
-        <div class="sect-t">📳 Feedback aptico</div>
-        <div class="srow"><div><div class="slbl">Vibrazione al tocco</div><div class="ssub">Intensità della vibrazione quando premi un pulsante, in entrambe le modalità</div></div></div>
+        <div class="sect-t">📳 <span data-i18n="hapticFeedback">Feedback aptico</span></div>
+        <div class="srow"><div><div class="slbl" data-i18n="hapticFeedback">Vibrazione al tocco</div><div class="ssub" data-i18n="vibTouchDesc">Intensità della vibrazione quando premi un pulsante, in entrambe le modalità</div></div></div>
         <div class="srow" style="flex-direction:column;align-items:stretch;gap:8px;">
           <div style="display:flex;align-items:center;gap:10px;">
             <input type="range" id="haptic-range" min="0" max="100" step="10" value="30" oninput="onHapticSlide(this.value)" style="flex:1;">
             <span id="haptic-val" style="font-size:.78rem;font-weight:800;min-width:60px;text-align:right;">Media</span>
           </div>
-          <button class="ba" style="align-self:flex-start" onclick="haptic()">📳 Prova</button>
+          <button class="ba" style="align-self:flex-start" onclick="haptic()">📳 <span data-i18n="test">Prova</span></button>
         </div>
       </div>
     </div>
     <div class="pane" id="p-sec">
       <div class="sect">
-        <div class="sect-t">🔒 Password del blocco</div>
-        <div class="ssub" style="margin-bottom:6px;">Usata per attivare/disattivare il blocco su Utenti, Agende e Impostazioni. Predefinita: <b>ADMIN</b>.</div>
-        <div class="fg"><label class="fl">Password attuale</label><input type="password" class="inp" id="pw-cur" placeholder="Password attuale" autocomplete="off" inputmode="none"></div>
-        <div class="fg"><label class="fl">Nuova password</label><input type="password" class="inp" id="pw-new1" placeholder="Nuova password" autocomplete="off" inputmode="none"></div>
-        <div class="fg"><label class="fl">Conferma nuova password</label><input type="password" class="inp" id="pw-new2" placeholder="Ripeti nuova password" autocomplete="off" inputmode="none"></div>
+        <div class="sect-t">🔒 <span data-i18n="lockSettings">Password del blocco</span></div>
+        <div class="ssub" style="margin-bottom:6px;"><span data-i18n="lockPwDesc">Usata per attivare/disattivare il blocco su Utenti, Agende e Impostazioni. Predefinita:</span> <b>ADMIN</b>.</div>
+        <div class="fg"><label class="fl" data-i18n="currentPw">Password attuale</label><input type="password" class="inp" id="pw-cur" placeholder="Password attuale" data-i18n-ph="currentPw" autocomplete="off" inputmode="none"></div>
+        <div class="fg"><label class="fl" data-i18n="newPw">Nuova password</label><input type="password" class="inp" id="pw-new1" placeholder="Nuova password" data-i18n-ph="newPw" autocomplete="off" inputmode="none"></div>
+        <div class="fg"><label class="fl" data-i18n="confirmNewPw">Conferma nuova password</label><input type="password" class="inp" id="pw-new2" placeholder="Ripeti nuova password" data-i18n-ph="confirmNewPw" autocomplete="off" inputmode="none"></div>
         <div class="ssub hidden" id="pw-chg-err" style="color:var(--red);font-weight:800"></div>
-        <div class="ssub hidden" id="pw-chg-ok" style="color:var(--grn-d);font-weight:800">✓ Password aggiornata</div>
-        <div class="srow"><div></div><button class="ba" onclick="changePw()">💾 Salva nuova password</button></div>
+        <div class="ssub hidden" id="pw-chg-ok" style="color:var(--grn-d);font-weight:800" data-i18n="pwUpdated">✓ Password aggiornata</div>
+        <div class="srow"><div></div><button class="ba" onclick="changePw()">💾 <span data-i18n="savePw">Salva nuova password</span></button></div>
       </div>
     </div>
     <div class="pane" id="p-data">
       <div class="sect">
         <div class="sect-t">💾 Backup</div>
-        <div class="srow"><div><div class="slbl">Esporta</div><div class="ssub">Salva tutto in JSON</div></div><button class="ba" onclick="expData()">⬇ Esporta</button></div>
-        <div class="srow"><div><div class="slbl">Importa</div><div class="ssub">Carica JSON</div></div><button class="ba" onclick="document.getElementById('f-imp').click()">⬆ Importa</button></div>
-        <div class="srow"><div><div class="slbl">Cancella tutto</div><div class="ssub">Elimina utenti e agende</div></div><button class="ba dg" onclick="clearAll()">🗑 Cancella</button></div>
+        <div class="srow"><div><div class="slbl" data-i18n="exportBackup">Esporta</div><div class="ssub" data-i18n="exportDesc">Salva tutto in JSON</div></div><button class="ba" onclick="expData()">⬇ <span data-i18n="exportBackup">Esporta</span></button></div>
+        <div class="srow"><div><div class="slbl" data-i18n="importBackup">Importa</div><div class="ssub" data-i18n="importDesc">Carica JSON</div></div><button class="ba" onclick="document.getElementById('f-imp').click()">⬆ <span data-i18n="importBackup">Importa</span></button></div>
+        <div class="srow"><div><div class="slbl" data-i18n="eraseAll">Cancella tutto</div><div class="ssub" data-i18n="eraseDesc">Elimina utenti e agende</div></div><button class="ba dg" onclick="clearAll()">🗑 <span data-i18n="eraseAll">Cancella</span></button></div>
       </div>
     </div>
     <div class="pane" id="p-info">
       <div class="sect">
-        <div class="sect-t">ℹ️ Versione</div>
-        <div class="srow"><div><div class="slbl">Versione installata</div><div class="ssub" id="app-ver-lbl">1.0.0</div></div></div>
-        <div class="srow"><div><div class="slbl">Controlla aggiornamenti</div><div class="ssub" id="upd-status">Verifica se è disponibile una nuova versione</div></div>
-          <button class="ba" id="upd-btn" onclick="checkForUpdate()">🔄 Aggiorna</button></div>
+        <div class="sect-t">ℹ️ <span data-i18n="installedVersion">Versione</span></div>
+        <div class="srow"><div><div class="slbl" data-i18n="installedVersion">Versione installata</div><div class="ssub" id="app-ver-lbl">1.0.0</div></div></div>
+        <div class="srow"><div><div class="slbl" data-i18n="checkUpdates">Controlla aggiornamenti</div><div class="ssub" id="upd-status" data-i18n="checkUpdatesDesc">Verifica se è disponibile una nuova versione</div></div>
+          <button class="ba" id="upd-btn" onclick="checkForUpdate()">🔄 <span data-i18n="checkUpdates">Aggiorna</span></button></div>
       </div>
       <div class="sect">
         <div class="sect-t">📱 App</div>
-        <div class="ssub" style="line-height:1.6">Agenda Visiva funziona anche offline una volta installata. Quando è disponibile una nuova versione online, il pulsante "Aggiorna" la scarica e riavvia l'app.</div>
+        <div class="ssub" style="line-height:1.6"><span id="app-name-in-info">Agenda Visiva</span> <span data-i18n="appInfoDesc">funziona anche offline una volta installata. Quando è disponibile una nuova versione online, il pulsante "Aggiorna" la scarica e riavvia l'app.</span></div>
       </div>
     </div>
   </div>
@@ -1397,8 +1363,9 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 <!-- MODALS -->
 <div class="mov hidden" id="m-user">
   <div class="mbox">
-    <div class="mttl" id="mu-ttl">👤 Nuovo Utente</div>
-    <div class="fg"><label class="fl">Nome</label><input type="text" class="inp" id="mu-n" placeholder="es: Luca" autocomplete="off" inputmode="none"></div>
+    <div class="mttl" id="mu-ttl" data-i18n="newUser">👤 Nuovo Utente</div>
+    <div class="fg"><label class="fl" data-i18n="name">Nome</label><input type="text" class="inp" id="mu-n" placeholder="es: Luca" data-i18n-ph="namePhUser" autocomplete="off" inputmode="none"></div>
+
     <div class="fg"><label class="fl">Colore</label>
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="mu-c">
         <div class="sw" data-c="#4A9EDB" style="background:#4A9EDB" onclick="pickUC('#4A9EDB')"></div>
@@ -1409,20 +1376,20 @@ html[data-tablet=on][data-theme=dark] .vctrl{
         <div class="sw" data-c="#F77F00" style="background:#F77F00" onclick="pickUC('#F77F00')"></div>
       </div>
     </div>
-    <div class="macts"><button class="bm cn" onclick="closeM('m-user')">Annulla</button><button class="bm ok" onclick="saveUser()">Salva</button></div>
+    <div class="macts"><button class="bm cn" onclick="closeM('m-user')" data-i18n="cancel">Annulla</button><button class="bm ok" onclick="saveUser()" data-i18n="save">Salva</button></div>
   </div>
 </div>
 <div class="mov hidden" id="m-ag">
   <div class="mbox">
-    <div class="mttl" id="m-ag-ttl">📋 Nuova Agenda</div>
-    <div class="fg"><label class="fl">Nome</label><input type="text" class="inp" id="ma-n" placeholder="es: Lunedì..." autocomplete="off" inputmode="none"></div>
-    <div class="macts"><button class="bm cn" onclick="closeM('m-ag')">Annulla</button><button class="bm ok" onclick="saveAgenda()">Salva</button></div>
+    <div class="mttl" id="m-ag-ttl" data-i18n="newAgendaTitle">📋 Nuova Agenda</div>
+    <div class="fg"><label class="fl" data-i18n="name">Nome</label><input type="text" class="inp" id="ma-n" placeholder="es: Lunedì..." data-i18n-ph="namePh" autocomplete="off" inputmode="none"></div>
+    <div class="macts"><button class="bm cn" onclick="closeM('m-ag')" data-i18n="cancel">Annulla</button><button class="bm ok" onclick="saveAgenda()" data-i18n="save">Salva</button></div>
   </div>
 </div>
 <div class="mov hidden" id="m-agbg">
   <div class="mbox" style="max-width:min(680px,96vw);width:96vw;max-height:94vh;overflow-y:auto;padding-top:10px;padding-bottom:10px;">
-    <div class="mttl" style="margin-bottom:0">🎨 Sfondo agenda</div>
-    <div class="ssub" style="margin-top:-4px">Le attività resteranno sempre ben visibili sopra, come adesso.</div>
+    <div class="mttl" style="margin-bottom:0">🎨 <span data-i18n="background">Sfondo</span> <span data-i18n="agendaSing">agenda</span></div>
+    <div class="ssub" style="margin-top:-4px" data-i18n="agBgDesc">Le attività resteranno sempre ben visibili sopra, come adesso.</div>
     <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;">
       <div style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;align-items:center;">
         <div id="agbg-preview">
@@ -1457,9 +1424,9 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 </div>
 <div class="mov hidden" id="m-cf">
   <div class="mbox">
-    <div class="mttl">🗑️ Conferma</div>
+    <div class="mttl">🗑️ <span data-i18n="confirmTitle">Conferma</span></div>
     <div id="m-cf-t" style="color:var(--mut);font-weight:600;font-size:.82rem"></div>
-    <div class="macts"><button class="bm cn" onclick="closeM('m-cf')">Annulla</button><button class="bm dg" id="m-cf-b">Elimina</button></div>
+    <div class="macts"><button class="bm cn" onclick="closeM('m-cf')" data-i18n="cancel">Annulla</button><button class="bm dg" id="m-cf-b" data-i18n="delete">Elimina</button></div>
   </div>
 </div>
 <div class="mov hidden" id="m-ar">
@@ -1482,29 +1449,29 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 </div>
 <div class="mov hidden" id="m-timerask">
   <div class="mbox" style="max-width:360px">
-    <div class="mttl">⏱️ Timer attivo</div>
-    <div class="ssub" style="margin-top:-6px">Vuoi che il timer continui a scorrere mentre modifichi l'agenda?</div>
+    <div class="mttl">⏱️ <span data-i18n="timerAskTtl">Timer attivo</span></div>
+    <div class="ssub" style="margin-top:-6px" data-i18n="timerAskDesc">Vuoi che il timer continui a scorrere mentre modifichi l'agenda?</div>
     <div class="macts">
-      <button class="bm cn" onclick="answerTimerAsk(false)">No, mettilo in pausa</button>
-      <button class="bm ok" onclick="answerTimerAsk(true)">Sì, continua</button>
+      <button class="bm cn" onclick="answerTimerAsk(false)" data-i18n="pauseIt">No, mettilo in pausa</button>
+      <button class="bm ok" onclick="answerTimerAsk(true)" data-i18n="continueTimer">Sì, continua</button>
     </div>
   </div>
 </div>
 <div class="mov hidden" id="m-pw">
   <div class="mbox" style="max-width:340px">
     <div class="mttl" id="m-pw-ttl">🔒 Password</div>
-    <div class="ssub" id="m-pw-sub" style="margin-top:-6px">Inserisci la password per continuare</div>
-    <div class="fg"><input type="password" class="inp" id="m-pw-inp" placeholder="Password" autocomplete="off" inputmode="none"></div>
-    <div class="ssub hidden" id="m-pw-err" style="color:var(--red);font-weight:800">Password errata</div>
-    <div class="macts"><button class="bm cn" onclick="closeM('m-pw')">Annulla</button><button class="bm ok" onclick="submitPw()">OK</button></div>
+    <div class="ssub" id="m-pw-sub" style="margin-top:-6px" data-i18n="enterPwToContinue">Inserisci la password per continuare</div>
+    <div class="fg"><input type="password" class="inp" id="m-pw-inp" placeholder="Password" data-i18n-ph="passwordPh" autocomplete="off" inputmode="none"></div>
+    <div class="ssub hidden" id="m-pw-err" style="color:var(--red);font-weight:800" data-i18n="wrongPw">Password errata</div>
+    <div class="macts"><button class="bm cn" onclick="closeM('m-pw')" data-i18n="cancel">Annulla</button><button class="bm ok" onclick="submitPw()">OK</button></div>
   </div>
 </div>
 <!-- Picker sheet: used by all custom dropdowns (renders like every other modal, always correctly oriented) -->
 <div class="xpk-ov" id="xpk-ov">
   <div class="xpk-box">
-    <div class="xpk-h" id="xpk-h">Scegli</div>
+    <div class="xpk-h" id="xpk-h" data-i18n="pickerChoose">Scegli</div>
     <div class="xpk-list" id="xpk-list"></div>
-    <div class="xpk-close"><button class="xpk-cbtn" onclick="xPkClose()">Annulla</button></div>
+    <div class="xpk-close"><button class="xpk-cbtn" onclick="xPkClose()" data-i18n="cancel">Annulla</button></div>
   </div>
 </div>
 
@@ -1529,7 +1496,84 @@ html[data-tablet=on][data-theme=dark] .vctrl{
 'use strict';
 // ═══ STATE ═══
 let ST={users:[],selU:null,selA:null,editIdx:null,lastT:'ring'};
-let CFG={theme:'light',acc:'blue',rt:'beep',sd:2,tablet:false,locked:false,pw:'ADMIN',hapticInt:30};
+let CFG={theme:'light',acc:'blue',rt:'beep',sd:2,tablet:false,locked:false,pw:'ADMIN',hapticInt:30,lang:null};
+const LANGS={it:'Italiano',en:'English',es:'Español',uk:'Українська',ru:'Русский'};
+const CYRILLIC_LANGS=['uk','ru'];
+const I18N={"it": {"appTitle": "Visual Schedule", "appTitleShort": "Agenda Visiva", "instr": "Istruzioni", "lockSettings": "Blocco impostazioni", "updAvailable": "✅ Nuova versione disponibile — tocca per installare", "useAgenda": "Usa Agenda", "startSession": "Avvia la sessione", "users": "Utenti", "agendas": "Agende", "noUsers": "Nessun utente", "noAgendas": "Nessuna agenda", "ready": "Pronto ✓", "createAgendaFirst": "Crea prima un’agenda", "backHome": "← Home", "new": "+ Nuovo", "modify": "Modifica", "duplicate": "Duplica", "delete": "Elimina", "rename": "Rinomina", "background": "Sfondo", "close": "Chiudi", "cancel": "Annulla", "save": "Salva", "ok": "OK", "done": "Fatto", "back": "Indietro", "next": "Avanti", "reset": "Ripristina", "exit": "Esci", "name": "Nome", "namePh": "es: Lunedì...", "stepNamePh": "es: Pranzo...", "password": "Password", "passwordPh": "Password", "newAgendaTitle": "📋 Nuova Agenda", "confirmDeleteUser": "Eliminare questo utente e tutte le sue agende?", "confirmDeleteAgenda": "Eliminare questa agenda?", "confirmDeleteStep": "Eliminare questo step?", "confirmDupAgenda": "Duplicare l’agenda con tutti i suoi step?", "editorTitle": "Editor", "addStep": "Aggiungi step", "modeImg": "Immagine", "modeTxt": "Testo", "modeBoth": "Entrambe", "device": "Dispositivo", "gallery": "Galleria", "remove": "Rimuovi", "timer": "Timer", "duration": "Durata", "type": "Tipo", "ring": "Anello", "digital": "Digitale", "bar": "Barra", "circle": "Cerchio", "autoAdvance": "Auto-avanza", "hours": "Ore", "minutes": "Minuti", "seconds": "Secondi", "finish": "FINE", "goOn": "AVANTI", "settings": "Impostazioni", "appearance": "Aspetto", "sound": "Suono", "security": "Sicurezza", "data": "Dati", "info": "Info", "theme": "Tema", "light": "Chiaro", "dark": "Scuro", "accentColor": "Colore accento", "tabletMode": "Modalità tablet", "language": "Lingua", "alarmType": "Tipo", "alarmDuration": "Durata", "test": "Prova", "hapticFeedback": "Feedback aptico", "hapticIntensity": "Intensità della vibrazione al tocco", "hapticOff": "Disattivata", "hapticLight": "Leggera", "hapticMed": "Media", "hapticStrong": "Forte", "currentPw": "Password attuale", "newPw": "Nuova password", "confirmNewPw": "Conferma nuova password", "savePw": "Salva nuova password", "pwUpdated": "✓ Password aggiornata", "pwWrong": "La password attuale non è corretta.", "pwEmpty": "Inserisci una nuova password.", "pwMismatch": "Le due password non coincidono.", "exportBackup": "Esporta", "importBackup": "Importa", "eraseAll": "Cancella tutto", "installedVersion": "Versione installata", "checkUpdates": "Controlla aggiornamenti", "chooseLanguage": "Scegli la lingua", "chooseLanguageDesc": "Potrai cambiarla in qualsiasi momento dalle Impostazioni.", "continue_": "Continua", "userSing": "utente", "agendaSing": "agenda", "selectUser": "Seleziona un utente", "agendasOf": "Agende di", "steps": "step", "insertName": "Inserisci un nome", "cantDeleteLastStep": "Non puoi eliminare l’ultimo step rimasto in questa sessione.", "confirmDeleteStepSession": "Eliminare questo step dalla sessione attuale?", "confirmDupStep": "Duplicare questo step?", "agendaNoSteps": "Agenda senza step!", "importSuccess": "✅ Importato!", "invalidFile": "❌ File non valido", "confirmDeleteAllData": "Eliminare TUTTI gli utenti e le agende?", "dragReorder": "Trascina per riordinare", "confirmTitle": "Conferma", "stepN": "Step", "stepName": "Nome dello step", "howToShow": "Come mostrarlo", "modeImgHint": "Solo immagine, senza testo.", "modeTxtHint": "Solo il nome dello step, scritto grande — nessuna immagine (agenda testuale).", "modeBothHint": "Immagine e nome dello step insieme, ben visibili.", "exportDesc": "Salva tutto in JSON", "importDesc": "Carica JSON", "eraseDesc": "Elimina utenti e agende", "checkUpdatesDesc": "Verifica se è disponibile una nuova versione", "appInfoDesc": "funziona anche offline una volta installata. Quando è disponibile una nuova versione online, il pulsante \"Aggiorna\" la scarica e riavvia l’app.", "newUser": "👤 Nuovo Utente", "chooseSchedule": "Scegli l’agenda", "startBtn": "Avvia", "tempEditTitle": "Modifica provvisoria (solo questa sessione)", "endEdit": "Termina modifica", "timerAskTtl": "Timer attivo", "timerAskDesc": "Vuoi che il timer continui a scorrere mentre modifichi l’agenda?", "pauseIt": "No, mettilo in pausa", "continueTimer": "Sì, continua", "enterPwToContinue": "Inserisci la password per continuare", "wrongPw": "Password errata", "pickerChoose": "Scegli", "agBgDesc": "Le attività resteranno sempre ben visibili sopra, come adesso.", "newF": "+ Nuova", "stepSing": "step", "list": "Lista", "unsaved": "Non salvato", "mode": "Modalità", "accent": "Accent", "device2": "Dispositivo", "tabletModeDesc": "Interfaccia più grande, tastiera di sistema, più spazio per le attività successive", "color": "Colore", "ringtone": "Suoneria", "lockPwDesc": "Usata per attivare/disattivare il blocco su Utenti, Agende e Impostazioni. Predefinita:", "vibTouchDesc": "Intensità della vibrazione quando premi un pulsante, in entrambe le modalità", "rt_beep": "Bip classico", "rt_bell": "Campanella", "rt_chime": "Carillon", "rt_alert": "Alert", "editUser": "✏️ Modifica Utente", "namePhUser": "es: Luca", "space": "Spazio", "enterSearchTerm": "Inserisci un termine", "searching": "⏳ Ricerca...", "noResults": "Nessun risultato", "connError": "Errore connessione", "renameAgendaTitle": "✎ Rinomina Agenda", "selectUserLabel": "Scegli utente", "selectAgendaLabel": "Scegli agenda", "soundDuration": "Durata suono"}, "en": {"appTitle": "Visual Schedule", "appTitleShort": "Visual Schedule", "instr": "Instructions", "lockSettings": "Lock settings", "updAvailable": "✅ New version available — tap to install", "useAgenda": "Use Schedule", "startSession": "Start session", "users": "Users", "agendas": "Schedules", "noUsers": "No users", "noAgendas": "No schedules", "ready": "Ready ✓", "createAgendaFirst": "Create a schedule first", "backHome": "← Home", "new": "+ New", "modify": "Edit", "duplicate": "Duplicate", "delete": "Delete", "rename": "Rename", "background": "Background", "close": "Close", "cancel": "Cancel", "save": "Save", "ok": "OK", "done": "Done", "back": "Back", "next": "Next", "reset": "Reset", "exit": "Exit", "name": "Name", "namePh": "e.g.: Monday...", "stepNamePh": "e.g.: Lunch...", "password": "Password", "passwordPh": "Password", "newAgendaTitle": "📋 New Schedule", "confirmDeleteUser": "Delete this user and all their schedules?", "confirmDeleteAgenda": "Delete this schedule?", "confirmDeleteStep": "Delete this step?", "confirmDupAgenda": "Duplicate this schedule with all its steps?", "editorTitle": "Editor", "addStep": "Add step", "modeImg": "Image", "modeTxt": "Text", "modeBoth": "Both", "device": "Device", "gallery": "Gallery", "remove": "Remove", "timer": "Timer", "duration": "Duration", "type": "Type", "ring": "Ring", "digital": "Digital", "bar": "Bar", "circle": "Circle", "autoAdvance": "Auto-advance", "hours": "Hours", "minutes": "Minutes", "seconds": "Seconds", "finish": "FINISH", "goOn": "NEXT", "settings": "Settings", "appearance": "Appearance", "sound": "Sound", "security": "Security", "data": "Data", "info": "Info", "theme": "Theme", "light": "Light", "dark": "Dark", "accentColor": "Accent color", "tabletMode": "Tablet mode", "language": "Language", "alarmType": "Type", "alarmDuration": "Duration", "test": "Test", "hapticFeedback": "Haptic feedback", "hapticIntensity": "Vibration intensity on tap", "hapticOff": "Off", "hapticLight": "Light", "hapticMed": "Medium", "hapticStrong": "Strong", "currentPw": "Current password", "newPw": "New password", "confirmNewPw": "Confirm new password", "savePw": "Save new password", "pwUpdated": "✓ Password updated", "pwWrong": "The current password is incorrect.", "pwEmpty": "Enter a new password.", "pwMismatch": "The two passwords don't match.", "exportBackup": "Export", "importBackup": "Import", "eraseAll": "Erase all", "installedVersion": "Installed version", "checkUpdates": "Check for updates", "chooseLanguage": "Choose your language", "chooseLanguageDesc": "You can change it any time from Settings.", "continue_": "Continue", "userSing": "user", "agendaSing": "schedule", "selectUser": "Select a user", "agendasOf": "Schedules for", "steps": "steps", "insertName": "Enter a name", "cantDeleteLastStep": "You can’t delete the last remaining step in this session.", "confirmDeleteStepSession": "Delete this step from the current session?", "confirmDupStep": "Duplicate this step?", "agendaNoSteps": "Schedule has no steps!", "importSuccess": "✅ Imported!", "invalidFile": "❌ Invalid file", "confirmDeleteAllData": "Delete ALL users and schedules?", "dragReorder": "Drag to reorder", "confirmTitle": "Confirm", "stepN": "Step", "stepName": "Step name", "howToShow": "How to show it", "modeImgHint": "Image only, no text.", "modeTxtHint": "Just the step name, in large text — no image (text-based schedule).", "modeBothHint": "Image and step name together, both clearly visible.", "exportDesc": "Save everything as JSON", "importDesc": "Load a JSON file", "eraseDesc": "Delete users and schedules", "checkUpdatesDesc": "Check if a new version is available", "appInfoDesc": "works offline once installed. When a new version is available online, the \"Update\" button downloads it and restarts the app.", "newUser": "👤 New User", "chooseSchedule": "Choose the schedule", "startBtn": "Start", "tempEditTitle": "Temporary edit (this session only)", "endEdit": "End editing", "timerAskTtl": "Timer running", "timerAskDesc": "Do you want the timer to keep running while you edit the schedule?", "pauseIt": "No, pause it", "continueTimer": "Yes, continue", "enterPwToContinue": "Enter the password to continue", "wrongPw": "Wrong password", "pickerChoose": "Choose", "agBgDesc": "Activities will always stay clearly visible on top, just like now.", "newF": "+ New", "stepSing": "step", "list": "List", "unsaved": "Unsaved", "mode": "Mode", "accent": "Accent", "device2": "Device", "tabletModeDesc": "Bigger interface, system keyboard, more room for upcoming activities", "color": "Color", "ringtone": "Ringtone", "lockPwDesc": "Used to turn the lock on Users, Schedules and Settings on/off. Default:", "vibTouchDesc": "Vibration intensity when you press a button, in both modes", "rt_beep": "Classic beep", "rt_bell": "Bell", "rt_chime": "Chime", "rt_alert": "Alert", "editUser": "✏️ Edit User", "namePhUser": "e.g.: Luca", "space": "Space", "enterSearchTerm": "Enter a search term", "searching": "⏳ Searching...", "noResults": "No results", "connError": "Connection error", "renameAgendaTitle": "✎ Rename Schedule", "selectUserLabel": "Choose a user", "selectAgendaLabel": "Choose a schedule", "soundDuration": "Sound duration"}, "es": {"appTitle": "Visual Schedule", "appTitleShort": "Agenda Visual", "instr": "Instrucciones", "lockSettings": "Bloqueo de ajustes", "updAvailable": "✅ Nueva versión disponible — toca para instalar", "useAgenda": "Usar Agenda", "startSession": "Iniciar sesión", "users": "Usuarios", "agendas": "Agendas", "noUsers": "Ningún usuario", "noAgendas": "Ninguna agenda", "ready": "Listo ✓", "createAgendaFirst": "Crea primero una agenda", "backHome": "← Inicio", "new": "+ Nuevo", "modify": "Editar", "duplicate": "Duplicar", "delete": "Eliminar", "rename": "Renombrar", "background": "Fondo", "close": "Cerrar", "cancel": "Cancelar", "save": "Guardar", "ok": "OK", "done": "Hecho", "back": "Atrás", "next": "Siguiente", "reset": "Reiniciar", "exit": "Salir", "name": "Nombre", "namePh": "ej: Lunes...", "stepNamePh": "ej: Almuerzo...", "password": "Contraseña", "passwordPh": "Contraseña", "newAgendaTitle": "📋 Nueva Agenda", "confirmDeleteUser": "¿Eliminar este usuario y todas sus agendas?", "confirmDeleteAgenda": "¿Eliminar esta agenda?", "confirmDeleteStep": "¿Eliminar este paso?", "confirmDupAgenda": "¿Duplicar esta agenda con todos sus pasos?", "editorTitle": "Editor", "addStep": "Añadir paso", "modeImg": "Imagen", "modeTxt": "Texto", "modeBoth": "Ambos", "device": "Dispositivo", "gallery": "Galería", "remove": "Quitar", "timer": "Temporizador", "duration": "Duración", "type": "Tipo", "ring": "Anillo", "digital": "Digital", "bar": "Barra", "circle": "Círculo", "autoAdvance": "Avance automático", "hours": "Horas", "minutes": "Minutos", "seconds": "Segundos", "finish": "FIN", "goOn": "SIGUIENTE", "settings": "Ajustes", "appearance": "Apariencia", "sound": "Sonido", "security": "Seguridad", "data": "Datos", "info": "Info", "theme": "Tema", "light": "Claro", "dark": "Oscuro", "accentColor": "Color de acento", "tabletMode": "Modo tablet", "language": "Idioma", "alarmType": "Tipo", "alarmDuration": "Duración", "test": "Probar", "hapticFeedback": "Vibración", "hapticIntensity": "Intensidad de la vibración al tocar", "hapticOff": "Desactivada", "hapticLight": "Ligera", "hapticMed": "Media", "hapticStrong": "Fuerte", "currentPw": "Contraseña actual", "newPw": "Nueva contraseña", "confirmNewPw": "Confirmar nueva contraseña", "savePw": "Guardar nueva contraseña", "pwUpdated": "✓ Contraseña actualizada", "pwWrong": "La contraseña actual no es correcta.", "pwEmpty": "Introduce una nueva contraseña.", "pwMismatch": "Las dos contraseñas no coinciden.", "exportBackup": "Exportar", "importBackup": "Importar", "eraseAll": "Borrar todo", "installedVersion": "Versión instalada", "checkUpdates": "Buscar actualizaciones", "chooseLanguage": "Elige tu idioma", "chooseLanguageDesc": "Puedes cambiarlo en cualquier momento desde Ajustes.", "continue_": "Continuar", "userSing": "usuario", "agendaSing": "agenda", "selectUser": "Selecciona un usuario", "agendasOf": "Agendas de", "steps": "pasos", "insertName": "Introduce un nombre", "cantDeleteLastStep": "No puedes eliminar el último paso restante en esta sesión.", "confirmDeleteStepSession": "¿Eliminar este paso de la sesión actual?", "confirmDupStep": "¿Duplicar este paso?", "agendaNoSteps": "¡La agenda no tiene pasos!", "importSuccess": "✅ ¡Importado!", "invalidFile": "❌ Archivo no válido", "confirmDeleteAllData": "¿Eliminar TODOS los usuarios y agendas?", "dragReorder": "Arrastra para reordenar", "confirmTitle": "Confirmar", "stepN": "Paso", "stepName": "Nombre del paso", "howToShow": "Cómo mostrarlo", "modeImgHint": "Solo imagen, sin texto.", "modeTxtHint": "Solo el nombre del paso, en letra grande — sin imagen (agenda de texto).", "modeBothHint": "Imagen y nombre del paso juntos, bien visibles.", "exportDesc": "Guarda todo en JSON", "importDesc": "Carga un archivo JSON", "eraseDesc": "Elimina usuarios y agendas", "checkUpdatesDesc": "Comprueba si hay una nueva versión disponible", "appInfoDesc": "funciona sin conexión una vez instalada. Cuando haya una nueva versión disponible, el botón \"Actualizar\" la descarga y reinicia la app.", "newUser": "👤 Nuevo Usuario", "chooseSchedule": "Elige la agenda", "startBtn": "Iniciar", "tempEditTitle": "Edición temporal (solo esta sesión)", "endEdit": "Terminar edición", "timerAskTtl": "Temporizador activo", "timerAskDesc": "¿Quieres que el temporizador siga corriendo mientras editas la agenda?", "pauseIt": "No, pausarlo", "continueTimer": "Sí, continuar", "enterPwToContinue": "Introduce la contraseña para continuar", "wrongPw": "Contraseña incorrecta", "pickerChoose": "Elegir", "agBgDesc": "Las actividades siempre se verán claramente encima, como ahora.", "newF": "+ Nueva", "stepSing": "paso", "list": "Lista", "unsaved": "Sin guardar", "mode": "Modo", "accent": "Acento", "device2": "Dispositivo", "tabletModeDesc": "Interfaz más grande, teclado del sistema, más espacio para las próximas actividades", "color": "Color", "ringtone": "Tono", "lockPwDesc": "Se usa para activar/desactivar el bloqueo de Usuarios, Agendas y Ajustes. Predeterminada:", "vibTouchDesc": "Intensidad de la vibración al pulsar un botón, en ambos modos", "rt_beep": "Pitido clásico", "rt_bell": "Campana", "rt_chime": "Carillón", "rt_alert": "Alerta", "editUser": "✏️ Editar Usuario", "namePhUser": "ej: Luca", "space": "Espacio", "enterSearchTerm": "Introduce un término", "searching": "⏳ Buscando...", "noResults": "Sin resultados", "connError": "Error de conexión", "renameAgendaTitle": "✎ Renombrar Agenda", "selectUserLabel": "Elige un usuario", "selectAgendaLabel": "Elige una agenda", "soundDuration": "Duración del sonido"}, "uk": {"appTitle": "Visual Schedule", "appTitleShort": "Візуальний розклад", "instr": "Інструкції", "lockSettings": "Блокування налаштувань", "updAvailable": "✅ Доступна нова версія — торкніться, щоб встановити", "useAgenda": "Використати розклад", "startSession": "Почати сеанс", "users": "Користувачі", "agendas": "Розклади", "noUsers": "Немає користувачів", "noAgendas": "Немає розкладів", "ready": "Готово ✓", "createAgendaFirst": "Спочатку створіть розклад", "backHome": "← Головна", "new": "+ Новий", "modify": "Редагувати", "duplicate": "Дублювати", "delete": "Видалити", "rename": "Перейменувати", "background": "Фон", "close": "Закрити", "cancel": "Скасувати", "save": "Зберегти", "ok": "OK", "done": "Готово", "back": "Назад", "next": "Далі", "reset": "Скинути", "exit": "Вийти", "name": "Назва", "namePh": "напр.: Понеділок...", "stepNamePh": "напр.: Обід...", "password": "Пароль", "passwordPh": "Пароль", "newAgendaTitle": "📋 Новий розклад", "confirmDeleteUser": "Видалити цього користувача та всі його розклади?", "confirmDeleteAgenda": "Видалити цей розклад?", "confirmDeleteStep": "Видалити цей крок?", "confirmDupAgenda": "Дублювати цей розклад з усіма кроками?", "editorTitle": "Редактор", "addStep": "Додати крок", "modeImg": "Зображення", "modeTxt": "Текст", "modeBoth": "Обидва", "device": "Пристрій", "gallery": "Галерея", "remove": "Прибрати", "timer": "Таймер", "duration": "Тривалість", "type": "Тип", "ring": "Кільце", "digital": "Цифровий", "bar": "Смуга", "circle": "Коло", "autoAdvance": "Авто-перехід", "hours": "Години", "minutes": "Хвилини", "seconds": "Секунди", "finish": "КІНЕЦЬ", "goOn": "ДАЛІ", "settings": "Налаштування", "appearance": "Вигляд", "sound": "Звук", "security": "Безпека", "data": "Дані", "info": "Інфо", "theme": "Тема", "light": "Світла", "dark": "Темна", "accentColor": "Колір акценту", "tabletMode": "Режим планшета", "language": "Мова", "alarmType": "Тип", "alarmDuration": "Тривалість", "test": "Перевірити", "hapticFeedback": "Вібровідгук", "hapticIntensity": "Інтенсивність вібрації при натисканні", "hapticOff": "Вимкнено", "hapticLight": "Легка", "hapticMed": "Середня", "hapticStrong": "Сильна", "currentPw": "Поточний пароль", "newPw": "Новий пароль", "confirmNewPw": "Підтвердіть новий пароль", "savePw": "Зберегти новий пароль", "pwUpdated": "✓ Пароль оновлено", "pwWrong": "Поточний пароль неправильний.", "pwEmpty": "Введіть новий пароль.", "pwMismatch": "Паролі не збігаються.", "exportBackup": "Експорт", "importBackup": "Імпорт", "eraseAll": "Видалити все", "installedVersion": "Встановлена версія", "checkUpdates": "Перевірити оновлення", "chooseLanguage": "Виберіть мову", "chooseLanguageDesc": "Ви можете змінити її будь-коли в Налаштуваннях.", "continue_": "Продовжити", "userSing": "користувач", "agendaSing": "розклад", "selectUser": "Виберіть користувача", "agendasOf": "Розклади для", "steps": "кроків", "insertName": "Введіть назву", "cantDeleteLastStep": "Не можна видалити останній крок цього сеансу.", "confirmDeleteStepSession": "Видалити цей крок із поточного сеансу?", "confirmDupStep": "Дублювати цей крок?", "agendaNoSteps": "У розкладі немає кроків!", "importSuccess": "✅ Імпортовано!", "invalidFile": "❌ Недійсний файл", "confirmDeleteAllData": "Видалити ВСІХ користувачів і розклади?", "dragReorder": "Перетягніть, щоб змінити порядок", "confirmTitle": "Підтвердження", "stepN": "Крок", "stepName": "Назва кроку", "howToShow": "Як показувати", "modeImgHint": "Тільки зображення, без тексту.", "modeTxtHint": "Лише назва кроку, великим текстом — без зображення.", "modeBothHint": "Зображення та назва кроку разом, добре видно.", "exportDesc": "Зберегти все у форматі JSON", "importDesc": "Завантажити файл JSON", "eraseDesc": "Видалити користувачів і розклади", "checkUpdatesDesc": "Перевірити наявність нової версії", "appInfoDesc": "працює офлайн після встановлення. Коли з’явиться нова версія, кнопка \"Оновити\" завантажить її та перезапустить застосунок.", "newUser": "👤 Новий користувач", "chooseSchedule": "Виберіть розклад", "startBtn": "Почати", "tempEditTitle": "Тимчасове редагування (лише цей сеанс)", "endEdit": "Завершити редагування", "timerAskTtl": "Таймер активний", "timerAskDesc": "Хочете, щоб таймер продовжував працювати під час редагування розкладу?", "pauseIt": "Ні, призупинити", "continueTimer": "Так, продовжити", "enterPwToContinue": "Введіть пароль, щоб продовжити", "wrongPw": "Неправильний пароль", "pickerChoose": "Вибрати", "agBgDesc": "Дії завжди залишатимуться добре видимими зверху, як зараз.", "newF": "+ Новий", "stepSing": "крок", "list": "Список", "unsaved": "Не збережено", "mode": "Режим", "accent": "Акцент", "device2": "Пристрій", "tabletModeDesc": "Більший інтерфейс, системна клавіатура, більше місця для наступних дій", "color": "Колір", "ringtone": "Мелодія", "lockPwDesc": "Використовується для увімкнення/вимкнення блокування Користувачів, Розкладів і Налаштувань. За замовчуванням:", "vibTouchDesc": "Інтенсивність вібрації при натисканні кнопки, в обох режимах", "rt_beep": "Класичний сигнал", "rt_bell": "Дзвіночок", "rt_chime": "Дзвони", "rt_alert": "Сигнал", "editUser": "✏️ Редагувати користувача", "namePhUser": "напр.: Люка", "space": "Пробіл", "enterSearchTerm": "Введіть пошуковий запит", "searching": "⏳ Пошук...", "noResults": "Немає результатів", "connError": "Помилка з’єднання", "renameAgendaTitle": "✎ Перейменувати розклад", "selectUserLabel": "Виберіть користувача", "selectAgendaLabel": "Виберіть розклад", "soundDuration": "Тривалість звуку"}, "ru": {"appTitle": "Visual Schedule", "appTitleShort": "Визуальное расписание", "instr": "Инструкции", "lockSettings": "Блокировка настроек", "updAvailable": "✅ Доступна новая версия — нажмите, чтобы установить", "useAgenda": "Использовать расписание", "startSession": "Начать сеанс", "users": "Пользователи", "agendas": "Расписания", "noUsers": "Нет пользователей", "noAgendas": "Нет расписаний", "ready": "Готово ✓", "createAgendaFirst": "Сначала создайте расписание", "backHome": "← Домой", "new": "+ Новый", "modify": "Изменить", "duplicate": "Дублировать", "delete": "Удалить", "rename": "Переименовать", "background": "Фон", "close": "Закрыть", "cancel": "Отмена", "save": "Сохранить", "ok": "OK", "done": "Готово", "back": "Назад", "next": "Далее", "reset": "Сбросить", "exit": "Выход", "name": "Название", "namePh": "напр.: Понедельник...", "stepNamePh": "напр.: Обед...", "password": "Пароль", "passwordPh": "Пароль", "newAgendaTitle": "📋 Новое расписание", "confirmDeleteUser": "Удалить этого пользователя и все его расписания?", "confirmDeleteAgenda": "Удалить это расписание?", "confirmDeleteStep": "Удалить этот шаг?", "confirmDupAgenda": "Дублировать это расписание со всеми шагами?", "editorTitle": "Редактор", "addStep": "Добавить шаг", "modeImg": "Изображение", "modeTxt": "Текст", "modeBoth": "Оба", "device": "Устройство", "gallery": "Галерея", "remove": "Убрать", "timer": "Таймер", "duration": "Длительность", "type": "Тип", "ring": "Кольцо", "digital": "Цифровой", "bar": "Полоса", "circle": "Круг", "autoAdvance": "Авто-переход", "hours": "Часы", "minutes": "Минуты", "seconds": "Секунды", "finish": "КОНЕЦ", "goOn": "ДАЛЕЕ", "settings": "Настройки", "appearance": "Внешний вид", "sound": "Звук", "security": "Безопасность", "data": "Данные", "info": "Инфо", "theme": "Тема", "light": "Светлая", "dark": "Тёмная", "accentColor": "Цвет акцента", "tabletMode": "Режим планшета", "language": "Язык", "alarmType": "Тип", "alarmDuration": "Длительность", "test": "Проверить", "hapticFeedback": "Вибрация", "hapticIntensity": "Интенсивность вибрации при нажатии", "hapticOff": "Выключена", "hapticLight": "Лёгкая", "hapticMed": "Средняя", "hapticStrong": "Сильная", "currentPw": "Текущий пароль", "newPw": "Новый пароль", "confirmNewPw": "Подтвердите новый пароль", "savePw": "Сохранить новый пароль", "pwUpdated": "✓ Пароль обновлён", "pwWrong": "Текущий пароль неверен.", "pwEmpty": "Введите новый пароль.", "pwMismatch": "Пароли не совпадают.", "exportBackup": "Экспорт", "importBackup": "Импорт", "eraseAll": "Удалить всё", "installedVersion": "Установленная версия", "checkUpdates": "Проверить обновления", "chooseLanguage": "Выберите язык", "chooseLanguageDesc": "Вы можете изменить его в любой момент в Настройках.", "continue_": "Продолжить", "userSing": "пользователь", "agendaSing": "расписание", "selectUser": "Выберите пользователя", "agendasOf": "Расписания для", "steps": "шагов", "insertName": "Введите название", "cantDeleteLastStep": "Нельзя удалить последний оставшийся шаг в этом сеансе.", "confirmDeleteStepSession": "Удалить этот шаг из текущего сеанса?", "confirmDupStep": "Дублировать этот шаг?", "agendaNoSteps": "В расписании нет шагов!", "importSuccess": "✅ Импортировано!", "invalidFile": "❌ Недействительный файл", "confirmDeleteAllData": "Удалить ВСЕХ пользователей и расписания?", "dragReorder": "Перетащите, чтобы изменить порядок", "confirmTitle": "Подтверждение", "stepN": "Шаг", "stepName": "Название шага", "howToShow": "Как показывать", "modeImgHint": "Только изображение, без текста.", "modeTxtHint": "Только название шага, крупным текстом — без изображения.", "modeBothHint": "Изображение и название шага вместе, хорошо видно.", "exportDesc": "Сохранить всё в формате JSON", "importDesc": "Загрузить файл JSON", "eraseDesc": "Удалить пользователей и расписания", "checkUpdatesDesc": "Проверить наличие новой версии", "appInfoDesc": "работает офлайн после установки. Когда появится новая версия, кнопка \"Обновить\" загрузит её и перезапустит приложение.", "newUser": "👤 Новый пользователь", "chooseSchedule": "Выберите расписание", "startBtn": "Начать", "tempEditTitle": "Временное редактирование (только этот сеанс)", "endEdit": "Завершить редактирование", "timerAskTtl": "Таймер активен", "timerAskDesc": "Хотите, чтобы таймер продолжал работать во время редактирования расписания?", "pauseIt": "Нет, приостановить", "continueTimer": "Да, продолжить", "enterPwToContinue": "Введите пароль, чтобы продолжить", "wrongPw": "Неверный пароль", "pickerChoose": "Выбрать", "agBgDesc": "Действия всегда будут хорошо видны сверху, как сейчас.", "newF": "+ Новый", "stepSing": "шаг", "list": "Список", "unsaved": "Не сохранено", "mode": "Режим", "accent": "Акцент", "device2": "Устройство", "tabletModeDesc": "Больший интерфейс, системная клавиатура, больше места для следующих действий", "color": "Цвет", "ringtone": "Мелодия", "lockPwDesc": "Используется для включения/выключения блокировки Пользователей, Расписаний и Настроек. По умолчанию:", "vibTouchDesc": "Интенсивность вибрации при нажатии кнопки, в обоих режимах", "rt_beep": "Классический сигнал", "rt_bell": "Колокольчик", "rt_chime": "Перезвон", "rt_alert": "Сигнал", "editUser": "✏️ Изменить пользователя", "namePhUser": "напр.: Люка", "space": "Пробел", "enterSearchTerm": "Введите поисковый запрос", "searching": "⏳ Поиск...", "noResults": "Нет результатов", "connError": "Ошибка соединения", "renameAgendaTitle": "✎ Переименовать расписание", "selectUserLabel": "Выберите пользователя", "selectAgendaLabel": "Выберите расписание", "soundDuration": "Длительность звука"}};
+const INSTR_HTML={"it": "      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🏠 Home</div>\n        <p>In alto a destra: <b>ℹ️ Info</b> (queste istruzioni), <b>🔓/🔒 Lucchetto</b> (blocco con password), <b>⚙️ Impostazioni</b>. L'app resta sempre a schermo intero, senza bisogno di attivarlo manualmente.</p>\n        <p>Al centro, il grande pulsante verde <b>▶️ Usa Agenda</b> avvia subito una sessione. Sotto, due pulsanti più piccoli portano a <b>👤 Utenti</b> e <b>📋 Agende</b>, dove si creano e modificano i profili e le loro agende. Se l'app è installata, tenendo premuta la sua icona compare una scorciatoia \"Usa Agenda\" che salta direttamente all'avvio della sessione.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">👤 Utenti</div>\n        <p>Crea un profilo per ogni persona che userà l'agenda, con nome e colore identificativo. Sulla card: <b>📋</b> Agende, <b>✏️</b> Modifica, <b>🗑</b> Elimina (con conferma — elimina anche tutte le sue agende).</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">📋 Agende</div>\n        <p>Seleziona un utente a sinistra per vedere o creare le sue agende (es. \"Lunedì\", \"Routine mattutina\"). Accanto al nome: <b>✎</b> Rinomina. In basso: <b>📂</b> Modifica (apre l'editor degli step), <b>⧉</b> Duplica (copia l'agenda intera con tutti gli step), <b>🎨</b> Sfondo, <b>🗑</b> Elimina.</p>\n        <p><b>🎨 Sfondo</b>: si vede durante l'uso dell'agenda, dietro alle attività (che restano sempre ben visibili sopra). Si sceglie tra neutro, alcuni preset con texture realistica (sughero, tappeto verde da biliardo, lavagna consumata, colori tenui) o una foto dalla galleria; l'anteprima mostra subito il risultato. La spunta \"Sfoca lo sfondo\" attenua i dettagli, con una barra per regolarne l'intensità — utile se lo sfondo scelto è troppo ricco e rischia di distrarre. C'è anche una scelta del <b>colore del testo</b> per le etichette che stanno fuori dalle immagini (es. il nome sotto le miniature), per restare leggibili su qualsiasi sfondo. Tutto si conferma con <b>💾 Salva</b>.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Editor degli step</div>\n        <p>Vista a griglia con tutte le attività dell'agenda come tessere numerate. Tocca <b>＋</b> per aggiungerne una, tocca una tessera per modificarla. Su ogni tessera: <b>✕</b> Elimina, <b>⧉</b> Duplica, <b>⠿</b> per trascinare e riordinare.</p>\n        <p>Nel form di modifica: il <b>nome</b> (max 40 caratteri), la <b>modalità</b> — 🖼️ solo immagine, 📝 solo testo grande (per un'agenda testuale invece che visiva), oppure 🖼️+📝 entrambe — con anteprima dal vivo. L'immagine si carica dal dispositivo o si cerca su ARASAAC. Il <b>timer</b> ha durata in ore/minuti/secondi, quattro stili (anello, digitale, barra, cerchio) e l'opzione \"auto-avanza\" per passare da solo allo step successivo a tempo scaduto.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">▶️ Usa Agenda</div>\n        <p>Il grande pulsante verde in Home avvia subito una sessione. Se c'è <b>un solo utente con una sola agenda</b> in tutta l'app, parte tutto in automatico; altrimenti si apre una schermata per scegliere utente e agenda (e se un utente ha una sola agenda, quella si seleziona da sola). Premi il pulsante ▶ verde per iniziare davvero.</p>\n        <p>Durante l'uso, l'attività attuale appare grande al centro con bordo verde; le successive scorrono in una striscia in alto. Si avanza toccando l'immagine attuale, oppure la tessera successiva nella striscia.</p>\n        <p>Se un'attività ha un <b>timer</b>, appare in un pannello a destra. Mentre è in corso, un tocco normale su Avanti/Indietro non funziona (il pannello lampeggia in blu) — si può comunque forzare l'avanzamento tenendo premuto 2 secondi. Al termine del tempo suona un allarme, il pannello lampeggia in verde e compare \"AVANTI\" (o \"FINE\" sull'ultimo step) per proseguire.</p>\n        <p>In fondo: <b>✕ Chiudi</b>, <b>◀ Indietro</b>, <b>↺ Ripristina</b>, <b>Avanti ▶</b>. Chiudi, Ripristina, e Avanti/Indietro quando bloccati da un timer, richiedono una pressione continua di <b>2 secondi</b> — una protezione contro i tocchi accidentali, con un effetto visivo mentre li tieni premuti.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Modifica provvisoria</div>\n        <p>In alto durante l'utilizzo, l'icona <b>✏️</b> (tienila premuta 2 secondi) attiva delle modifiche rapide senza mai cambiare schermata: sopra l'attività attuale e ogni tessera successiva compaiono <b>✏️</b> Modifica, <b>⧉</b> Duplica, <b>✕</b> Elimina, <b>⠿</b> per riordinare, più un riquadro <b>＋</b> per aggiungerne una nuova. Toccando ✏️ su una tessera si apre lo stesso form usato in creazione (nome, modalità, immagine o timer) da confermare con <b>✅ Fatto</b>.</p>\n        <p>Queste modifiche valgono <b>solo per la sessione in corso</b> e si sommano finché resti dentro: l'agenda salvata non cambia mai, e tutto torna come prima uscendo e riaprendola. Le attività già completate non sono modificabili da qui. Se l'attività attuale ha un timer in corso, all'apertura ti verrà chiesto se farlo continuare o metterlo in pausa (riprende da dove si era fermato); modificando invece proprio quel timer, il nuovo valore si applica subito. Per uscire dalla modalità modifica, tocca <b>✅ Fatto</b> al posto di ✏️ — un tocco normale, senza bisogno di tenerlo premuto.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔒 Blocco con password</div>\n        <p>Il lucchetto in alto attiva o disattiva un blocco a password per Utenti, Agende e Impostazioni — utile contro modifiche accidentali. Password predefinita: <b>ADMIN</b>, cambiabile in Impostazioni → 🔒 Sicurezza. Quando il blocco è attivo, toccare un'area bloccata non chiede nulla: pulsante e lucchetto pulsano in rosso. L'unico modo per entrare, o per disattivare il blocco, è toccare il lucchetto e inserire la password lì.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">⚙️ Impostazioni</div>\n        <p><b>Aspetto</b>: tema chiaro/scuro, 6 colori accento, e \"Modalità tablet\" per un'interfaccia più grande adatta a schermi grandi.</p>\n        <p><b>Suono</b>: tipo di suoneria di fine timer (Bip classico, Campanella, Carillon, Alert) e durata, con pulsante di prova. Nella stessa scheda, il <b>feedback aptico</b>: intensità della vibrazione ad ogni pressione di un pulsante, da \"Disattivata\" a \"Forte\" — funziona su tutti i pulsanti dell'app, sia in modalità telefono che tablet.</p>\n        <p><b>Sicurezza</b>: qui si cambia la password del blocco — richiede quella attuale più la nuova, ripetuta due volte per conferma.</p>\n        <p><b>Dati</b>: esporta/importa un backup completo, oppure cancella tutto.</p>\n        <p><b>Info</b>: versione installata e controllo aggiornamenti — l'app controlla automaticamente anche all'avvio, e se ne trova uno mostra un banner verde in Home per installarlo con un tocco.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔐 Bloccare il tablet solo su questa app</div>\n        <p>Il blocco con password protegge le impostazioni <i>dentro</i> l'app, ma non impedisce di uscire e usare il tablet per altro. Per impedirlo davvero serve una funzione del sistema operativo, di solito chiamata <b>\"Fissa app\"</b> o <b>\"App pinning\"</b> — gratuita e già presente su ogni tablet Android o iPad.</p>\n        <p>Una volta attivata, il tablet mostra <b>solo</b> questa app: niente tasto Home, niente altre app o notifiche; per uscire serve un PIN scelto da te. Il percorso cambia da marca a marca; esempio (Samsung, One UI 6.1):</p>\n        <p><b>1)</b> Impostazioni → Sicurezza → Altre impostazioni di sicurezza → attiva \"Aggiungi applicazione\" sotto \"Trust agent\".<br>\n        <b>2)</b> Apri le app recenti, tocca l'icona di Agenda Visiva e premi \"Aggiungi applicazione\".<br>\n        <b>3)</b> Da quel momento il tablet resta bloccato su questa app; per sbloccarlo premi insieme \"App recenti\" e \"Indietro\".</p>\n        <p>Se il tuo tablet non mostra questa voce, cerca \"fissa\" o \"pin\" nelle Impostazioni: quasi tutti i produttori hanno una funzione equivalente.</p>\n      </div>", "en": "      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🏠 Home</div>\n        <p>Top right: <b>ℹ️ Info</b> (these instructions), <b>🔓/🔒 Lock</b> (password lock), <b>⚙️ Settings</b>. The app always stays full-screen, no need to turn that on manually.</p>\n        <p>In the center, the big green <b>▶️ Use Schedule</b> button starts a session right away. Below it, two smaller buttons lead to <b>👤 Users</b> and <b>📋 Schedules</b>, where profiles and their schedules are created and edited. If the app is installed, long-pressing its icon shows a \"Use Schedule\" shortcut that jumps straight to starting a session.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">👤 Users</div>\n        <p>Create a profile for each person who will use the schedule, with a name and an identifying color. On the card: <b>📋</b> Schedules, <b>✏️</b> Edit, <b>🗑</b> Delete (with confirmation — also deletes all their schedules).</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">📋 Schedules</div>\n        <p>Select a user on the left to see or create their schedules (e.g. \"Monday\", \"Morning routine\"). Next to the name: <b>✎</b> Rename. Below: <b>📂</b> Edit (opens the step editor), <b>⧉</b> Duplicate (copies the whole schedule with all its steps), <b>🎨</b> Background, <b>🗑</b> Delete.</p>\n        <p><b>🎨 Background</b>: shown while using the schedule, behind the activities (which always stay clearly visible on top). Choose between neutral, a few realistic-texture presets (cork board, green billiard felt, worn chalkboard, soft colors) or a photo from the gallery; the preview shows the result right away. The \"Blur background\" checkbox softens the details, with a slider for the intensity — useful if the chosen background is too busy and risks being distracting. There's also a choice of <b>text color</b> for labels that sit outside the images (e.g. the name under thumbnails), to stay readable against any background. Everything is confirmed with <b>💾 Save</b>.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Step editor</div>\n        <p>A grid view with all the schedule's activities as numbered tiles. Tap <b>＋</b> to add one, tap a tile to edit it. On each tile: <b>✕</b> Delete, <b>⧉</b> Duplicate, <b>⠿</b> to drag and reorder.</p>\n        <p>In the edit form: the <b>name</b> (max 40 characters), the <b>mode</b> — 🖼️ image only, 📝 large text only (for a text-based schedule instead of a visual one), or 🖼️+📝 both — with a live preview. The image is uploaded from the device or searched on ARASAAC. The <b>timer</b> has a duration in hours/minutes/seconds, four styles (ring, digital, bar, circle) and an \"auto-advance\" option to move on to the next step by itself once time is up.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">▶️ Use Schedule</div>\n        <p>The big green button on Home starts a session right away. If there's <b>only one user with only one schedule</b> in the whole app, everything starts automatically; otherwise a screen opens to choose the user and schedule (and if a user has only one schedule, that one is selected automatically). Press the green ▶ button to actually begin.</p>\n        <p>During use, the current activity appears large in the center with a green border; the upcoming ones scroll in a strip at the top. Advance by tapping the current image, or the next tile in the strip.</p>\n        <p>If an activity has a <b>timer</b>, it appears in a panel on the right. While it's running, a normal tap on Back/Next doesn't work (the panel flashes blue) — you can still force it forward by holding for 2 seconds. When time runs out, an alarm sounds, the panel flashes green and \"NEXT\" appears (or \"FINISH\" on the last step) to continue.</p>\n        <p>At the bottom: <b>✕ Close</b>, <b>◀ Back</b>, <b>↺ Reset</b>, <b>Next ▶</b>. Close, Reset, and Back/Next when blocked by a timer, all require a continuous <b>2-second</b> press — a protection against accidental taps, with a visual effect while you hold them.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Temporary edit</div>\n        <p>At the top during use, the <b>✏️</b> icon (hold it for 2 seconds) turns on quick edits without ever changing screen: above the current activity and every upcoming tile, <b>✏️</b> Edit, <b>⧉</b> Duplicate, <b>✕</b> Delete, <b>⠿</b> to reorder appear, plus a <b>＋</b> tile to add a new one. Tapping ✏️ on a tile opens the same form used when creating it (name, mode, image or timer), confirmed with <b>✅ Done</b>.</p>\n        <p>These changes apply <b>only to the current session</b> and add up as long as you stay in it: the saved schedule never changes, and everything goes back to how it was once you leave and reopen it. Already-completed activities can't be edited from here. If the current activity has a running timer, opening this will ask whether to keep it running or pause it (it resumes from where it stopped); editing that very timer instead applies the new value immediately. To leave edit mode, tap <b>✅ Done</b> in place of ✏️ — a normal tap, no need to hold it.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔒 Password lock</div>\n        <p>The lock icon at the top turns a password lock for Users, Schedules and Settings on or off — useful against accidental changes. Default password: <b>ADMIN</b>, changeable in Settings → 🔒 Security. While the lock is on, tapping a locked area asks for nothing: the button and the lock icon just flash red. The only way in, or to turn the lock off, is tapping the lock icon and entering the password there.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">⚙️ Settings</div>\n        <p><b>Appearance</b>: light/dark theme, 6 accent colors, and \"Tablet mode\" for a bigger interface suited to large screens.</p>\n        <p><b>Sound</b>: timer-end ringtone type (Classic beep, Bell, Chime, Alert) and duration, with a test button. In the same tab, <b>haptic feedback</b>: vibration intensity on every button press, from \"Off\" to \"Strong\" — works on every button in the app, in both phone and tablet mode.</p>\n        <p><b>Security</b>: this is where the lock's password is changed — it requires the current one plus the new one, repeated twice to confirm.</p>\n        <p><b>Data</b>: export/import a full backup, or erase everything.</p>\n        <p><b>Info</b>: installed version and update check — the app also checks automatically on startup, and if it finds one, shows a green banner on Home to install it with a tap.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔐 Locking the tablet to just this app</div>\n        <p>The password lock protects settings <i>inside</i> the app, but doesn't stop someone from leaving it and using the tablet for other things. To really prevent that you need an operating-system feature, usually called <b>\"Pin app\"</b> or <b>\"App pinning\"</b> — free and already built into every Android tablet or iPad.</p>\n        <p>Once turned on, the tablet shows <b>only</b> this app: no Home button, no other apps or notifications; a PIN you choose is needed to exit. The exact path varies by brand; example (Samsung, One UI 6.1):</p>\n        <p><b>1)</b> Settings → Security → More security settings → turn on \"Add application\" under \"Trust agent\".<br>\n        <b>2)</b> Open recent apps, tap Visual Schedule's icon and press \"Add application\".<br>\n        <b>3)</b> From then on the tablet stays locked to this app; to unlock it, press \"Recent apps\" and \"Back\" together.</p>\n        <p>If your tablet doesn't show this option, search \"pin\" in Settings: almost every manufacturer has an equivalent feature.</p>\n      </div>", "es": "      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🏠 Inicio</div>\n        <p>Arriba a la derecha: <b>ℹ️ Info</b> (estas instrucciones), <b>🔓/🔒 Candado</b> (bloqueo con contraseña), <b>⚙️ Ajustes</b>. La app se mantiene siempre a pantalla completa, sin necesidad de activarlo manualmente.</p>\n        <p>En el centro, el gran botón verde <b>▶️ Usar Agenda</b> inicia de inmediato una sesión. Debajo, dos botones más pequeños llevan a <b>👤 Usuarios</b> y <b>📋 Agendas</b>, donde se crean y modifican los perfiles y sus agendas. Si la app está instalada, mantener pulsado su icono muestra un atajo \"Usar Agenda\" que salta directamente al inicio de la sesión.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">👤 Usuarios</div>\n        <p>Crea un perfil para cada persona que usará la agenda, con nombre y color identificativo. En la tarjeta: <b>📋</b> Agendas, <b>✏️</b> Editar, <b>🗑</b> Eliminar (con confirmación — también elimina todas sus agendas).</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">📋 Agendas</div>\n        <p>Selecciona un usuario a la izquierda para ver o crear sus agendas (ej. \"Lunes\", \"Rutina matutina\"). Junto al nombre: <b>✎</b> Renombrar. Abajo: <b>📂</b> Editar (abre el editor de pasos), <b>⧉</b> Duplicar (copia toda la agenda con todos sus pasos), <b>🎨</b> Fondo, <b>🗑</b> Eliminar.</p>\n        <p><b>🎨 Fondo</b>: se ve durante el uso de la agenda, detrás de las actividades (que siempre permanecen bien visibles encima). Se elige entre neutro, algunos ajustes con textura realista (corcho, fieltro verde de billar, pizarra desgastada, colores suaves) o una foto de la galería; la vista previa muestra el resultado de inmediato. La casilla \"Difuminar fondo\" atenúa los detalles, con una barra para ajustar su intensidad — útil si el fondo elegido es demasiado recargado y distrae. También hay una elección del <b>color del texto</b> para las etiquetas que están fuera de las imágenes (ej. el nombre bajo las miniaturas), para seguir siendo legibles sobre cualquier fondo. Todo se confirma con <b>💾 Guardar</b>.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Editor de pasos</div>\n        <p>Vista en cuadrícula con todas las actividades de la agenda como fichas numeradas. Toca <b>＋</b> para añadir una, toca una ficha para editarla. En cada ficha: <b>✕</b> Eliminar, <b>⧉</b> Duplicar, <b>⠿</b> para arrastrar y reordenar.</p>\n        <p>En el formulario de edición: el <b>nombre</b> (máx. 40 caracteres), el <b>modo</b> — 🖼️ solo imagen, 📝 solo texto grande (para una agenda de texto en lugar de visual), o 🖼️+📝 ambos — con vista previa en directo. La imagen se sube desde el dispositivo o se busca en ARASAAC. El <b>temporizador</b> tiene una duración en horas/minutos/segundos, cuatro estilos (anillo, digital, barra, círculo) y la opción \"avance automático\" para pasar solo al siguiente paso cuando se acabe el tiempo.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">▶️ Usar Agenda</div>\n        <p>El gran botón verde en Inicio inicia de inmediato una sesión. Si hay <b>un solo usuario con una sola agenda</b> en toda la app, todo empieza automáticamente; si no, se abre una pantalla para elegir usuario y agenda (y si un usuario tiene una sola agenda, esa se selecciona sola). Pulsa el botón ▶ verde para empezar de verdad.</p>\n        <p>Durante el uso, la actividad actual aparece grande en el centro con borde verde; las siguientes se desplazan en una franja arriba. Se avanza tocando la imagen actual, o la ficha siguiente en la franja.</p>\n        <p>Si una actividad tiene un <b>temporizador</b>, aparece en un panel a la derecha. Mientras está en marcha, un toque normal en Atrás/Siguiente no funciona (el panel parpadea en azul) — se puede forzar el avance manteniendo pulsado 2 segundos. Al acabar el tiempo suena una alarma, el panel parpadea en verde y aparece \"SIGUIENTE\" (o \"FIN\" en el último paso) para continuar.</p>\n        <p>Abajo: <b>✕ Cerrar</b>, <b>◀ Atrás</b>, <b>↺ Reiniciar</b>, <b>Siguiente ▶</b>. Cerrar, Reiniciar, y Atrás/Siguiente cuando están bloqueados por un temporizador, requieren una pulsación continua de <b>2 segundos</b> — una protección contra toques accidentales, con un efecto visual mientras los mantienes pulsados.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Edición temporal</div>\n        <p>Arriba durante el uso, el icono <b>✏️</b> (mantenlo pulsado 2 segundos) activa ediciones rápidas sin cambiar nunca de pantalla: sobre la actividad actual y cada ficha siguiente aparecen <b>✏️</b> Editar, <b>⧉</b> Duplicar, <b>✕</b> Eliminar, <b>⠿</b> para reordenar, más una ficha <b>＋</b> para añadir una nueva. Al tocar ✏️ en una ficha se abre el mismo formulario usado al crearla (nombre, modo, imagen o temporizador), que se confirma con <b>✅ Hecho</b>.</p>\n        <p>Estos cambios valen <b>solo para la sesión actual</b> y se acumulan mientras permanezcas en ella: la agenda guardada nunca cambia, y todo vuelve a como estaba al salir y reabrirla. Las actividades ya completadas no se pueden editar desde aquí. Si la actividad actual tiene un temporizador en marcha, al abrir esto se te preguntará si quieres que siga o ponerlo en pausa (se reanuda desde donde se detuvo); si en cambio editas ese mismo temporizador, el nuevo valor se aplica de inmediato. Para salir del modo edición, toca <b>✅ Hecho</b> en lugar de ✏️ — un toque normal, sin necesidad de mantenerlo pulsado.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔒 Bloqueo con contraseña</div>\n        <p>El icono del candado arriba activa o desactiva un bloqueo con contraseña para Usuarios, Agendas y Ajustes — útil contra cambios accidentales. Contraseña predeterminada: <b>ADMIN</b>, se puede cambiar en Ajustes → 🔒 Seguridad. Mientras el bloqueo está activo, tocar un área bloqueada no pide nada: el botón y el candado simplemente parpadean en rojo. La única forma de entrar, o de desactivar el bloqueo, es tocar el candado e introducir la contraseña ahí.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">⚙️ Ajustes</div>\n        <p><b>Apariencia</b>: tema claro/oscuro, 6 colores de acento, y \"Modo tablet\" para una interfaz más grande adecuada a pantallas grandes.</p>\n        <p><b>Sonido</b>: tipo de tono de fin de temporizador (Pitido clásico, Campana, Carillón, Alerta) y duración, con botón de prueba. En la misma pestaña, la <b>vibración</b>: intensidad de la vibración en cada pulsación de un botón, de \"Desactivada\" a \"Fuerte\" — funciona en todos los botones de la app, tanto en modo teléfono como tablet.</p>\n        <p><b>Seguridad</b>: aquí se cambia la contraseña del bloqueo — requiere la actual más la nueva, repetida dos veces para confirmar.</p>\n        <p><b>Datos</b>: exporta/importa una copia de seguridad completa, o borra todo.</p>\n        <p><b>Info</b>: versión instalada y comprobación de actualizaciones — la app también comprueba automáticamente al iniciarse, y si encuentra una, muestra un banner verde en Inicio para instalarla con un toque.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔐 Bloquear la tablet solo en esta app</div>\n        <p>El bloqueo con contraseña protege los ajustes <i>dentro</i> de la app, pero no impide salir y usar la tablet para otra cosa. Para impedirlo de verdad hace falta una función del sistema operativo, normalmente llamada <b>\"Fijar app\"</b> o <b>\"App pinning\"</b> — gratuita y ya presente en cualquier tablet Android o iPad.</p>\n        <p>Una vez activada, la tablet muestra <b>solo</b> esta app: sin botón de inicio, sin otras apps ni notificaciones; para salir hace falta un PIN elegido por ti. La ruta exacta cambia según la marca; ejemplo (Samsung, One UI 6.1):</p>\n        <p><b>1)</b> Ajustes → Seguridad → Más ajustes de seguridad → activa \"Añadir aplicación\" bajo \"Trust agent\".<br>\n        <b>2)</b> Abre las apps recientes, toca el icono de Visual Schedule y pulsa \"Añadir aplicación\".<br>\n        <b>3)</b> A partir de ese momento la tablet queda bloqueada en esta app; para desbloquearla pulsa a la vez \"Apps recientes\" y \"Atrás\".</p>\n        <p>Si tu tablet no muestra esta opción, busca \"fijar\" o \"pin\" en Ajustes: casi todos los fabricantes tienen una función equivalente.</p>\n      </div>", "uk": "      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🏠 Головна</div>\n        <p>Вгорі справа: <b>ℹ️ Інфо</b> (ці інструкції), <b>🔓/🔒 Замок</b> (блокування паролем), <b>⚙️ Налаштування</b>. Застосунок завжди залишається на весь екран, вмикати це вручну не потрібно.</p>\n        <p>По центру велика зелена кнопка <b>▶️ Використати розклад</b> одразу починає сеанс. Нижче дві менші кнопки ведуть до <b>👤 Користувачів</b> і <b>📋 Розкладів</b>, де створюються та редагуються профілі та їхні розклади. Якщо застосунок встановлено, довге натискання на його іконку показує ярлик \"Використати розклад\", який одразу переходить до початку сеансу.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">👤 Користувачі</div>\n        <p>Створіть профіль для кожної людини, яка користуватиметься розкладом, з ім’ям і кольором для розпізнавання. На картці: <b>📋</b> Розклади, <b>✏️</b> Редагувати, <b>🗑</b> Видалити (з підтвердженням — видаляє також усі його розклади).</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">📋 Розклади</div>\n        <p>Виберіть користувача зліва, щоб побачити або створити його розклади (напр. \"Понеділок\", \"Ранкова рутина\"). Поруч з назвою: <b>✎</b> Перейменувати. Знизу: <b>📂</b> Редагувати (відкриває редактор кроків), <b>⧉</b> Дублювати (копіює весь розклад з усіма кроками), <b>🎨</b> Фон, <b>🗑</b> Видалити.</p>\n        <p><b>🎨 Фон</b>: видно під час використання розкладу, позаду дій (які завжди залишаються добре видимими зверху). Можна вибрати нейтральний, кілька варіантів з реалістичною текстурою (корок, зелений більярдний фетр, потерта дошка, приглушені кольори) або фото з галереї; попередній перегляд одразу показує результат. Прапорець \"Розмити фон\" пом’якшує деталі, з повзунком для налаштування інтенсивності — корисно, якщо обраний фон занадто насичений і може відволікати. Є також вибір <b>кольору тексту</b> для написів поза зображеннями (напр. назва під мініатюрами), щоб залишатися читабельними на будь-якому фоні. Все підтверджується кнопкою <b>💾 Зберегти</b>.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Редактор кроків</div>\n        <p>Сітка з усіма діями розкладу у вигляді пронумерованих плиток. Торкніться <b>＋</b>, щоб додати нову, торкніться плитки, щоб її редагувати. На кожній плитці: <b>✕</b> Видалити, <b>⧉</b> Дублювати, <b>⠿</b> щоб перетягнути й змінити порядок.</p>\n        <p>У формі редагування: <b>назва</b> (макс. 40 символів), <b>режим</b> — 🖼️ лише зображення, 📝 лише великий текст (для текстового розкладу замість візуального), або 🖼️+📝 обидва — з попереднім переглядом наживо. Зображення завантажується з пристрою або шукається на ARASAAC. <b>Таймер</b> має тривалість у годинах/хвилинах/секундах, чотири стилі (кільце, цифровий, смуга, коло) і опцію \"авто-перехід\" для самостійного переходу до наступного кроку, коли час вийде.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">▶️ Використати розклад</div>\n        <p>Велика зелена кнопка на Головній одразу починає сеанс. Якщо в усьому застосунку є <b>лише один користувач з одним розкладом</b>, все починається автоматично; інакше відкривається екран для вибору користувача й розкладу (а якщо в користувача лише один розклад, він вибирається сам). Натисніть зелену кнопку ▶, щоб справді почати.</p>\n        <p>Під час використання поточна дія з’являється великою по центру із зеленою рамкою; наступні прокручуються у смузі зверху. Перехід — торканням поточного зображення або наступної плитки у смузі.</p>\n        <p>Якщо в дії є <b>таймер</b>, він з’являється на панелі справа. Поки він працює, звичайне торкання Назад/Далі не діє (панель блимає синім) — можна все ж примусово перейти, утримуючи 2 секунди. Коли час закінчується, лунає сигнал, панель блимає зеленим і з’являється \"ДАЛІ\" (або \"КІНЕЦЬ\" на останньому кроці) для продовження.</p>\n        <p>Знизу: <b>✕ Закрити</b>, <b>◀ Назад</b>, <b>↺ Скинути</b>, <b>Далі ▶</b>. Закрити, Скинути, та Назад/Далі, коли заблоковані таймером, вимагають безперервного натискання протягом <b>2 секунд</b> — захист від випадкових дотиків, з візуальним ефектом, поки ви їх утримуєте.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Тимчасове редагування</div>\n        <p>Вгорі під час використання іконка <b>✏️</b> (утримуйте 2 секунди) вмикає швидкі редагування без переходу на інший екран: над поточною дією та кожною наступною плиткою з’являються <b>✏️</b> Редагувати, <b>⧉</b> Дублювати, <b>✕</b> Видалити, <b>⠿</b> для зміни порядку, плюс плитка <b>＋</b> для додавання нової. Торкання ✏️ на плитці відкриває ту саму форму, що й при створенні (назва, режим, зображення або таймер), підтверджується кнопкою <b>✅ Готово</b>.</p>\n        <p>Ці зміни діють <b>лише для поточного сеансу</b> і накопичуються, поки ви в ньому залишаєтесь: збережений розклад ніколи не змінюється, і все повертається до попереднього стану після виходу й повторного відкриття. Вже виконані дії тут редагувати не можна. Якщо в поточної дії є активний таймер, при відкритті вас запитають, продовжити його чи призупинити (він відновиться з місця зупинки); а редагування саме цього таймера одразу застосовує нове значення. Щоб вийти з режиму редагування, торкніться <b>✅ Готово</b> замість ✏️ — звичайне торкання, без утримання.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔒 Блокування паролем</div>\n        <p>Іконка замка вгорі вмикає або вимикає блокування паролем для Користувачів, Розкладів і Налаштувань — корисно проти випадкових змін. Пароль за замовчуванням: <b>ADMIN</b>, можна змінити в Налаштуваннях → 🔒 Безпека. Поки блокування активне, торкання заблокованої області нічого не запитує: кнопка та іконка замка просто блимають червоним. Єдиний спосіб увійти або вимкнути блокування — торкнутися іконки замка і ввести пароль там.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">⚙️ Налаштування</div>\n        <p><b>Вигляд</b>: світла/темна тема, 6 кольорів акценту, і \"Режим планшета\" для більшого інтерфейсу, зручного для великих екранів.</p>\n        <p><b>Звук</b>: тип мелодії закінчення таймера (Класичний сигнал, Дзвіночок, Дзвони, Сигнал) і тривалість, з кнопкою перевірки. На тій же вкладці — <b>вібровідгук</b>: інтенсивність вібрації при кожному натисканні кнопки, від \"Вимкнено\" до \"Сильна\" — працює на всіх кнопках застосунку, як у режимі телефону, так і планшета.</p>\n        <p><b>Безпека</b>: тут змінюється пароль блокування — потрібен поточний плюс новий, повторений двічі для підтвердження.</p>\n        <p><b>Дані</b>: експорт/імпорт повної резервної копії, або видалення всього.</p>\n        <p><b>Інфо</b>: встановлена версія та перевірка оновлень — застосунок також перевіряє автоматично при запуску, і якщо знаходить оновлення, показує зелений банер на Головній для встановлення одним дотиком.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔐 Заблокувати планшет лише на цьому застосунку</div>\n        <p>Блокування паролем захищає налаштування <i>всередині</i> застосунку, але не заважає вийти з нього й користуватися планшетом для іншого. Щоб дійсно це запобігти, потрібна функція операційної системи, зазвичай звана <b>\"Закріпити застосунок\"</b> або <b>\"App pinning\"</b> — безкоштовна і вже вбудована в кожен Android-планшет чи iPad.</p>\n        <p>Після ввімкнення планшет показує <b>лише</b> цей застосунок: жодної кнопки Home, жодних інших застосунків чи сповіщень; для виходу потрібен обраний вами PIN. Точний шлях залежить від виробника; приклад (Samsung, One UI 6.1):</p>\n        <p><b>1)</b> Налаштування → Безпека → Додаткові налаштування безпеки → увімкніть \"Додати застосунок\" під \"Trust agent\".<br>\n        <b>2)</b> Відкрийте останні застосунки, торкніться іконки Visual Schedule і натисніть \"Додати застосунок\".<br>\n        <b>3)</b> Відтоді планшет залишається заблокованим на цьому застосунку; щоб розблокувати, натисніть одночасно \"Останні застосунки\" та \"Назад\".</p>\n        <p>Якщо ваш планшет не показує цей пункт, шукайте \"закріпити\" або \"pin\" у Налаштуваннях: майже всі виробники мають подібну функцію.</p>\n      </div>", "ru": "      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🏠 Главная</div>\n        <p>Вверху справа: <b>ℹ️ Инфо</b> (эти инструкции), <b>🔓/🔒 Замок</b> (блокировка паролем), <b>⚙️ Настройки</b>. Приложение всегда остаётся на весь экран, включать это вручную не нужно.</p>\n        <p>По центру большая зелёная кнопка <b>▶️ Использовать расписание</b> сразу начинает сеанс. Ниже две кнопки поменьше ведут к <b>👤 Пользователям</b> и <b>📋 Расписаниям</b>, где создаются и редактируются профили и их расписания. Если приложение установлено, долгое нажатие на его значок показывает ярлык \"Использовать расписание\", который сразу переходит к началу сеанса.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">👤 Пользователи</div>\n        <p>Создайте профиль для каждого человека, который будет пользоваться расписанием, с именем и цветом для распознавания. На карточке: <b>📋</b> Расписания, <b>✏️</b> Изменить, <b>🗑</b> Удалить (с подтверждением — удаляет также все его расписания).</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">📋 Расписания</div>\n        <p>Выберите пользователя слева, чтобы увидеть или создать его расписания (напр. \"Понедельник\", \"Утренний распорядок\"). Рядом с названием: <b>✎</b> Переименовать. Внизу: <b>📂</b> Изменить (открывает редактор шагов), <b>⧉</b> Дублировать (копирует всё расписание со всеми шагами), <b>🎨</b> Фон, <b>🗑</b> Удалить.</p>\n        <p><b>🎨 Фон</b>: виден во время использования расписания, позади действий (которые всегда остаются хорошо видны сверху). Можно выбрать нейтральный, несколько вариантов с реалистичной текстурой (пробка, зелёный бильярдный фетр, потёртая доска, приглушённые цвета) или фото из галереи; предпросмотр сразу показывает результат. Флажок \"Размыть фон\" смягчает детали, с ползунком для настройки интенсивности — полезно, если выбранный фон слишком насыщенный и отвлекает. Есть также выбор <b>цвета текста</b> для надписей вне изображений (напр. имя под миниатюрами), чтобы оставаться читаемыми на любом фоне. Всё подтверждается кнопкой <b>💾 Сохранить</b>.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Редактор шагов</div>\n        <p>Сетка со всеми действиями расписания в виде пронумерованных плиток. Нажмите <b>＋</b>, чтобы добавить новую, нажмите на плитку, чтобы её отредактировать. На каждой плитке: <b>✕</b> Удалить, <b>⧉</b> Дублировать, <b>⠿</b> чтобы перетащить и изменить порядок.</p>\n        <p>В форме редактирования: <b>название</b> (макс. 40 символов), <b>режим</b> — 🖼️ только изображение, 📝 только крупный текст (для текстового расписания вместо визуального), или 🖼️+📝 оба — с предпросмотром вживую. Изображение загружается с устройства или ищется на ARASAAC. <b>Таймер</b> имеет длительность в часах/минутах/секундах, четыре стиля (кольцо, цифровой, полоса, круг) и опцию \"авто-переход\" для самостоятельного перехода к следующему шагу по истечении времени.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">▶️ Использовать расписание</div>\n        <p>Большая зелёная кнопка на Главной сразу начинает сеанс. Если во всём приложении есть <b>только один пользователь с одним расписанием</b>, всё начинается автоматически; иначе открывается экран для выбора пользователя и расписания (а если у пользователя только одно расписание, оно выбирается само). Нажмите зелёную кнопку ▶, чтобы действительно начать.</p>\n        <p>Во время использования текущее действие появляется крупно по центру с зелёной рамкой; следующие прокручиваются в полосе сверху. Переход — нажатием на текущее изображение или на следующую плитку в полосе.</p>\n        <p>Если у действия есть <b>таймер</b>, он появляется на панели справа. Пока он работает, обычное нажатие Назад/Далее не действует (панель мигает синим) — можно всё же принудительно перейти, удерживая 2 секунды. Когда время заканчивается, звучит сигнал, панель мигает зелёным и появляется \"ДАЛЕЕ\" (или \"КОНЕЦ\" на последнем шаге) для продолжения.</p>\n        <p>Внизу: <b>✕ Закрыть</b>, <b>◀ Назад</b>, <b>↺ Сбросить</b>, <b>Далее ▶</b>. Закрыть, Сбросить и Назад/Далее, когда заблокированы таймером, требуют непрерывного нажатия в течение <b>2 секунд</b> — защита от случайных касаний, с визуальным эффектом, пока вы их удерживаете.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">✏️ Временное редактирование</div>\n        <p>Вверху во время использования значок <b>✏️</b> (удерживайте 2 секунды) включает быстрые правки без перехода на другой экран: над текущим действием и каждой следующей плиткой появляются <b>✏️</b> Изменить, <b>⧉</b> Дублировать, <b>✕</b> Удалить, <b>⠿</b> для изменения порядка, плюс плитка <b>＋</b> для добавления новой. Нажатие ✏️ на плитке открывает ту же форму, что и при создании (название, режим, изображение или таймер), подтверждается кнопкой <b>✅ Готово</b>.</p>\n        <p>Эти изменения действуют <b>только для текущего сеанса</b> и накапливаются, пока вы в нём остаётесь: сохранённое расписание никогда не меняется, и всё возвращается к прежнему состоянию после выхода и повторного открытия. Уже выполненные действия здесь редактировать нельзя. Если у текущего действия есть работающий таймер, при открытии вас спросят, продолжить его или приостановить (он возобновится с места остановки); а редактирование именно этого таймера сразу применяет новое значение. Чтобы выйти из режима редактирования, нажмите <b>✅ Готово</b> вместо ✏️ — обычное нажатие, без удержания.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔒 Блокировка паролем</div>\n        <p>Значок замка вверху включает или выключает блокировку паролем для Пользователей, Расписаний и Настроек — полезно против случайных изменений. Пароль по умолчанию: <b>ADMIN</b>, можно изменить в Настройках → 🔒 Безопасность. Пока блокировка активна, нажатие на заблокированную область ничего не запрашивает: кнопка и значок замка просто мигают красным. Единственный способ войти или выключить блокировку — нажать значок замка и ввести пароль там.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">⚙️ Настройки</div>\n        <p><b>Внешний вид</b>: светлая/тёмная тема, 6 акцентных цветов, и \"Режим планшета\" для более крупного интерфейса, подходящего для больших экранов.</p>\n        <p><b>Звук</b>: тип мелодии окончания таймера (Классический сигнал, Колокольчик, Перезвон, Сигнал) и длительность, с кнопкой проверки. На той же вкладке — <b>вибрация</b>: интенсивность вибрации при каждом нажатии кнопки, от \"Выключена\" до \"Сильная\" — работает на всех кнопках приложения, как в режиме телефона, так и планшета.</p>\n        <p><b>Безопасность</b>: здесь меняется пароль блокировки — требуется текущий плюс новый, повторённый дважды для подтверждения.</p>\n        <p><b>Данные</b>: экспорт/импорт полной резервной копии, или удаление всего.</p>\n        <p><b>Инфо</b>: установленная версия и проверка обновлений — приложение также проверяет автоматически при запуске, и если находит обновление, показывает зелёный баннер на Главной для установки одним нажатием.</p>\n      </div>\n      <div class=\"instr-sect\">\n        <div class=\"instr-sect-t\">🔐 Заблокировать планшет только на этом приложении</div>\n        <p>Блокировка паролем защищает настройки <i>внутри</i> приложения, но не мешает выйти из него и пользоваться планшетом для другого. Чтобы действительно это предотвратить, нужна функция операционной системы, обычно называемая <b>\"Закрепить приложение\"</b> или <b>\"App pinning\"</b> — бесплатная и уже встроенная в каждый Android-планшет или iPad.</p>\n        <p>После включения планшет показывает <b>только</b> это приложение: никакой кнопки Home, никаких других приложений или уведомлений; для выхода нужен выбранный вами PIN. Точный путь зависит от производителя; пример (Samsung, One UI 6.1):</p>\n        <p><b>1)</b> Настройки → Безопасность → Дополнительные настройки безопасности → включите \"Добавить приложение\" под \"Trust agent\".<br>\n        <b>2)</b> Откройте недавние приложения, нажмите на значок Visual Schedule и нажмите \"Добавить приложение\".<br>\n        <b>3)</b> С этого момента планшет остаётся заблокированным на этом приложении; чтобы разблокировать, нажмите одновременно \"Недавние приложения\" и \"Назад\".</p>\n        <p>Если ваш планшет не показывает этот пункт, ищите \"закрепить\" или \"pin\" в Настройках: почти у всех производителей есть похожая функция.</p>\n      </div>"};
+
+function t(key){
+  const lang=CFG.lang||'it';
+  return (I18N[lang]&&I18N[lang][key]!==undefined) ? I18N[lang][key] : (I18N.it[key]!==undefined ? I18N.it[key] : key);
+}
+// Applies the current language to every element carrying a data-i18n
+// (textContent), data-i18n-title (title attribute) or
+// data-i18n-ph (placeholder) marker — called on load and whenever the
+// language changes.
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(k) el.textContent=t(k);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-title');
+    if(k) el.title=t(k);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-ph');
+    if(k) el.placeholder=t(k);
+  });
+  const logo=el('app-title-logo');
+  if(logo) logo.innerHTML = (CFG.lang==='it') ? 'Agenda <span>Visiva</span>' : 'Visual <span>Schedule</span>';
+  document.title=t('appTitleShort');
+  renderInstructions();
+  const appNameInfo=el('app-name-in-info');
+  if(appNameInfo) appNameInfo.textContent=t('appTitleShort');
+}
+// Fills the instructions overlay with the full translated HTML for
+// the current language, falling back to Italian if somehow missing.
+function renderInstructions(){
+  const body=el('instr-body');
+  if(!body) return;
+  const lang=CFG.lang||'it';
+  body.innerHTML = INSTR_HTML[lang] || INSTR_HTML.it;
+}
+function setLang(lang){
+  CFG.lang=lang;
+  saveCfg();
+  applyI18n();
+  buildKeyboardLayout();
+  // Re-render whichever screen is currently visible, so dynamically
+  // generated text (grids, lists, editor) picks up the new language too
+  const cur=document.querySelector('.scr.on');
+  if(cur){
+    if(cur.id==='s-home')rHome();
+    else if(cur.id==='s-users')rUsers();
+    else if(cur.id==='s-ag')rAg();
+    else if(cur.id==='s-ed')rEd();
+    else if(cur.id==='s-use')rUse();
+    else if(cur.id==='s-set')rSet();
+  }
+}
+function renderLangPicker(){
+  const g=el('lang-pick-grid');
+  g.innerHTML='';
+  Object.keys(LANGS).forEach(code=>{
+    const b=mk('button','lang-pick-btn');
+    b.textContent=LANGS[code];
+    b.onclick=()=>{
+      CFG.lang=code;
+      saveCfg();
+      applyI18n();
+      buildKeyboardLayout();
+      document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+      el('s-home').classList.add('on');
+      rHome();
+    };
+    g.appendChild(b);
+  });
+}
+
 let VS={steps:[],idx:-1,iv:null,rem:0,tot:0,tt:'ring',uid:null,aid:null};
 let pUC='#4A9EDB', agSel=null, dirty=false, cfCb=null;
 // ═══ MODIFICA PROVVISORIA (in-place, session-only editing) ═══
@@ -1657,9 +1701,9 @@ function go(id){
 // ═══ HOME ═══
 function rHome(){
   const nu=ST.users.length, na=ST.users.reduce((s,u)=>s+(u.agendas?.length||0),0);
-  set('hb-u',nu?nu+' utent'+(nu===1?'e':'i'):'Nessun utente');
-  set('hb-a',na?na+' agend'+(na===1?'a':'e'):'Nessuna agenda');
-  set('hb-s',na?'Pronto ✓':'Crea prima un\u2019agenda');
+  set('hb-u',nu?nu+' '+t(nu===1?'userSing':'users'):t('noUsers'));
+  set('hb-a',na?na+' '+t(na===1?'agendaSing':'agendas'):t('noAgendas'));
+  set('hb-s',na?t('ready'):t('createAgendaFirst'));
 }
 function toggleInstr(){
   el('instr-ov').classList.toggle('open');
@@ -1668,7 +1712,7 @@ function toggleInstr(){
 // ═══ USERS ═══
 function rUsers(){
   const g=el('u-grid');g.innerHTML='';
-  if(!ST.users.length){g.innerHTML='<div class="empty"><div class="empty-i">👤</div><div class="empty-t">Nessun utente — premi + Nuovo</div></div>';return;}
+  if(!ST.users.length){g.innerHTML='<div class="empty"><div class="empty-i">👤</div><div class="empty-t">'+t('noUsers')+' — '+t('new')+'</div></div>';return;}
   ST.users.forEach(u=>{
     const has=u.agendas?.length>0;
     const c=mk('div','ucard'+(has?' has':''));
@@ -1676,13 +1720,13 @@ function rUsers(){
     const av=mk('div','uc-av');av.style.background=u.color;av.textContent=u.name[0].toUpperCase();
     const nd=mk('div');
     const nm=mk('div','uc-nm');nm.textContent=u.name;
-    const st=mk('div','uc-st');st.textContent=has?('✓ '+u.agendas.length+' agend'+(u.agendas.length===1?'a':'e')):'Nessuna agenda';
+    const st=mk('div','uc-st');st.textContent=has?('✓ '+u.agendas.length+' '+t(u.agendas.length===1?'agendaSing':'agendas')):t('noAgendas');
     nd.appendChild(nm);nd.appendChild(st);
     top.appendChild(av);top.appendChild(nd);
     const acts=mk('div','uc-acts');
-    const bo=mkIconAction('e','📋','Agende','Agende',()=>{agSel=u.id;go('s-ag');});
-    const be=mkIconAction('p','✏️','Modifica','Modifica',()=>openEditUser(u.id));
-    const bd=mkIconAction('d','🗑','Elimina','Elimina',()=>delUser(u.id));
+    const bo=mkIconAction('e','📋',t('agendas'),t('agendas'),()=>{agSel=u.id;go('s-ag');});
+    const be=mkIconAction('p','✏️',t('modify'),t('modify'),()=>openEditUser(u.id));
+    const bd=mkIconAction('d','🗑',t('delete'),t('delete'),()=>delUser(u.id));
     acts.appendChild(bo);acts.appendChild(be);acts.appendChild(bd);
     c.appendChild(top);c.appendChild(acts);
     g.appendChild(c);
@@ -1692,7 +1736,7 @@ let editingUserId=null;
 function openAddUser(){
   editingUserId=null;
   pUC='#4A9EDB';el('mu-n').value='';
-  el('mu-ttl').textContent='👤 Nuovo Utente';
+  el('mu-ttl').textContent=t('newUser');
   document.querySelectorAll('#mu-c .sw').forEach(e=>e.classList.toggle('on',e.dataset.c===pUC));
   openM('m-user');
 }
@@ -1700,14 +1744,14 @@ function openEditUser(id){
   const u=gu(id);if(!u)return;
   editingUserId=id;
   pUC=u.color;el('mu-n').value=u.name;
-  el('mu-ttl').textContent='✏️ Modifica Utente';
+  el('mu-ttl').textContent=t('editUser');
   document.querySelectorAll('#mu-c .sw').forEach(e=>e.classList.toggle('on',e.dataset.c===pUC));
   openM('m-user');
 }
 function pickUC(c){pUC=c;document.querySelectorAll('#mu-c .sw').forEach(e=>e.classList.toggle('on',e.dataset.c===c));}
 function saveUser(){
   const n=el('mu-n').value.trim();
-  if(!n){alert('Inserisci un nome');return;}
+  if(!n){alert(t('insertName'));return;}
   if(editingUserId){
     const u=gu(editingUserId);
     if(u){u.name=n;u.color=pUC;}
@@ -1718,7 +1762,7 @@ function saveUser(){
   save();closeM('m-user');rUsers();rHome();
 }
 function delUser(id){
-  confirm2('Eliminare utente e tutte le sue agende?',()=>{
+  confirm2(t('confirmDeleteUser'),()=>{
     ST.users=ST.users.filter(u=>u.id!==id);
     if(agSel===id)agSel=null;
     save();rUsers();rHome();
@@ -1742,24 +1786,24 @@ function rAgUL(){
   });
 }
 function rAgGrid(){
-  const g=el('ag-grid'), t=el('ag-t'), b=el('ag-add');
-  if(!agSel){t.textContent='Seleziona un utente';b.classList.add('hidden');g.innerHTML='<div class="empty"><div class="empty-i">👈</div><div class="empty-t">Seleziona un utente</div></div>';return;}
+  const g=el('ag-grid'), ttl=el('ag-t'), b=el('ag-add');
+  if(!agSel){ttl.textContent=t('selectUser');b.classList.add('hidden');g.innerHTML='<div class="empty"><div class="empty-i">👈</div><div class="empty-t">'+t('selectUser')+'</div></div>';return;}
   const u=gu(agSel);if(!u){agSel=null;rAg();return;}
-  t.textContent='Agende di '+u.name;b.classList.remove('hidden');
+  ttl.textContent=t('agendasOf')+' '+u.name;b.classList.remove('hidden');
   g.innerHTML='';
-  if(!u.agendas.length){g.innerHTML='<div class="empty"><div class="empty-i">📋</div><div class="empty-t">Nessuna agenda — premi + Nuova</div></div>';return;}
+  if(!u.agendas.length){g.innerHTML='<div class="empty"><div class="empty-i">📋</div><div class="empty-t">'+t('noAgendas')+' — '+t('new')+'</div></div>';return;}
   u.agendas.forEach(a=>{
     const c=mk('div','acard');
     const nameRow=mk('div','acard-nrow');
     const nm=mk('div','acard-n');nm.textContent=a.name;
-    const br=mkIconAction('e sm','✎','Rinomina','Rinomina',()=>openRenameAgenda(u.id,a.id));
+    const br=mkIconAction('e sm','✎',t('rename'),t('rename'),()=>openRenameAgenda(u.id,a.id));
     nameRow.appendChild(nm);nameRow.appendChild(br);
-    const m=mk('div','acard-m');m.textContent=a.steps.length+' step';
+    const m=mk('div','acard-m');m.textContent=a.steps.length+' '+t(a.steps.length===1?'stepSing':'steps');
     const acts=mk('div','acard-a');
-    const be=mkIconAction('p','📂','Modifica','Modifica',()=>{ST.selU=u.id;ST.selA=a.id;ST.editIdx=null;dirty=false;go('s-ed');rEd();});
-    const bc=mkIconAction('e','⧉','Duplica','Duplica',()=>dupAgenda(u.id,a.id));
-    const bg2=mkIconAction('e','🎨','Sfondo','Sfondo',()=>openAgBg(u.id,a.id));
-    const bd=mkIconAction('d','🗑','Elimina','Elimina',()=>delAgenda(u.id,a.id));
+    const be=mkIconAction('p','📂',t('modify'),t('modify'),()=>{ST.selU=u.id;ST.selA=a.id;ST.editIdx=null;dirty=false;go('s-ed');rEd();});
+    const bc=mkIconAction('e','⧉',t('duplicate'),t('duplicate'),()=>dupAgenda(u.id,a.id));
+    const bg2=mkIconAction('e','🎨',t('background'),t('background'),()=>openAgBg(u.id,a.id));
+    const bd=mkIconAction('d','🗑',t('delete'),t('delete'),()=>delAgenda(u.id,a.id));
     acts.appendChild(be);acts.appendChild(bc);acts.appendChild(bg2);acts.appendChild(bd);
     c.appendChild(nameRow);c.appendChild(m);c.appendChild(acts);
     g.appendChild(c);
@@ -1769,7 +1813,7 @@ let renamingAgendaId=null;
 function openAddAgenda(){
   if(!agSel)return;
   renamingAgendaId=null;
-  set('m-ag-ttl','📋 Nuova Agenda');
+  set('m-ag-ttl',t('newAgendaTitle'));
   el('ma-n').value='';
   openM('m-ag');
 }
@@ -1778,13 +1822,13 @@ function openRenameAgenda(uid2,aid){
   if(!a)return;
   agSel=uid2;
   renamingAgendaId=aid;
-  set('m-ag-ttl','✎ Rinomina Agenda');
+  set('m-ag-ttl',t('renameAgendaTitle'));
   el('ma-n').value=a.name;
   openM('m-ag');
 }
 function saveAgenda(){
   const n=el('ma-n').value.trim();
-  if(!n){alert('Inserisci un nome');return;}
+  if(!n){alert(t('insertName'));return;}
   const u=gu(agSel);if(!u)return;
   if(renamingAgendaId){
     const a=u.agendas.find(x=>x.id===renamingAgendaId);
@@ -1796,7 +1840,7 @@ function saveAgenda(){
   save();closeM('m-ag');rAgGrid();rHome();
 }
 function delAgenda(uid2,aid){
-  confirm2('Eliminare questa agenda?',()=>{
+  confirm2(t('confirmDeleteAgenda'),()=>{
     const u=gu(uid2);if(!u)return;
     u.agendas=u.agendas.filter(a=>a.id!==aid);
     save();rAgGrid();rHome();
@@ -1805,14 +1849,14 @@ function delAgenda(uid2,aid){
 function dupAgenda(uid2,aid){
   const u=gu(uid2); const a=u?.agendas.find(x=>x.id===aid);
   if(!u||!a)return;
-  confirm2('Duplicare l\u2019agenda "'+a.name+'" con tutti i suoi step?',()=>{
+  confirm2(t('confirmDupAgenda'),()=>{
     const copy=JSON.parse(JSON.stringify(a));
     copy.id=uid();
     copy.steps.forEach(s=>{s.id=uid();});
     const idx=u.agendas.findIndex(x=>x.id===aid);
     u.agendas.splice(idx+1,0,copy);
     save();rAgGrid();rHome();
-  },'Duplica');
+  },t('duplicate'));
 }
 
 // ═══ SFONDO AGENDA ═══
@@ -2049,8 +2093,8 @@ function exitViewEdit(){
   rStrip();
 }
 function vDelStep(i){
-  if(VS.steps.length<=1){ alert('Non puoi eliminare l\u2019ultimo step rimasto in questa sessione.'); return; }
-  confirm2('Eliminare questo step dalla sessione attuale?',()=>{
+  if(VS.steps.length<=1){ alert(t('cantDeleteLastStep')); return; }
+  confirm2(t('confirmDeleteStepSession'),()=>{
     VS.steps.splice(i,1);
     if(VS.idx>=VS.steps.length) VS.idx=VS.steps.length-1;
     rCur();rStrip();
@@ -2107,12 +2151,12 @@ function rEdGrid(){
     const sc=mk('div','sc');sc.dataset.i=i;
     const box=mk('div','sc-box');
     let textPreview=null;
-    if(s.mode==='text'){box.classList.add('is-txt');const t=mk('div','sc-txt');t.textContent=s.label||'';box.appendChild(t);textPreview=t;}
+    if(s.mode==='text'){box.classList.add('is-txt');const tx=mk('div','sc-txt');tx.textContent=s.label||'';box.appendChild(tx);textPreview=tx;}
     else{box.classList.remove('is-txt');if(s.img){box.classList.add('has-img');const im=mk('img');im.src=s.img;box.appendChild(im);}else{const p=mk('div');p.style.cssText='font-size:1.5rem;opacity:.3';p.textContent='🖼️';box.appendChild(p);}}
     const x=mk('button','sc-x');x.textContent='✕';x.onclick=e=>{e.stopPropagation();delStep(i);};box.appendChild(x);
-    const ed=mk('button','sc-ed');ed.textContent='✏️';ed.title='Modifica step';ed.onclick=e=>{e.stopPropagation();selStep(i);};box.appendChild(ed);
-    const dp=mk('button','sc-dup');dp.textContent='⧉';dp.title='Duplica step';dp.onclick=e=>{e.stopPropagation();dupStep(i);};box.appendChild(dp);
-    const h=mk('div','sc-h');h.textContent='⠿';h.title='Trascina per riordinare';box.appendChild(h);
+    const ed=mk('button','sc-ed');ed.textContent='✏️';ed.title=t('modify');ed.onclick=e=>{e.stopPropagation();selStep(i);};box.appendChild(ed);
+    const dp=mk('button','sc-dup');dp.textContent='⧉';dp.title=t('duplicate');dp.onclick=e=>{e.stopPropagation();dupStep(i);};box.appendChild(dp);
+    const h=mk('div','sc-h');h.textContent='⠿';h.title=t('dragReorder');box.appendChild(h);
     sc.appendChild(box);
     const hasT=s.timer?.on&&((s.timer.h||0)*3600+(s.timer.m||0)*60+(s.timer.s||0)>0);
     const l=mk('div','sc-l');
@@ -2148,7 +2192,7 @@ function rEdGrid(){
   });
   const add=mk('div','sc sc-add');
   const ab=mk('div','sc-box');ab.textContent='＋';add.appendChild(ab);
-  const al=mk('div','sc-l');al.textContent='Aggiungi';add.appendChild(al);
+  const al=mk('div','sc-l');al.textContent=t('addStep');add.appendChild(al);
   add.onclick=()=>addStep();
   g.appendChild(add);
 }
@@ -2255,7 +2299,7 @@ function addStep(){
 function delStep(i){
   const a=ga();if(!a)return;
   const s=a.steps[i];if(!s)return;
-  confirm2('Eliminare lo step "'+s.label+'"?',()=>{
+  confirm2(t('confirmDeleteStep'),()=>{
     const a2=ga();if(!a2)return;
     a2.steps.splice(i,1);
     if(ST.editIdx!==null){
@@ -2268,16 +2312,16 @@ function delStep(i){
 function dupStep(i){
   const a=ga();if(!a)return;
   const s=a.steps[i];if(!s)return;
-  confirm2('Duplicare lo step "'+s.label+'"?',()=>{
+  confirm2(t('confirmDupStep'),()=>{
     const a2=ga();if(!a2)return;
     const copy=JSON.parse(JSON.stringify(a2.steps[i]));
     copy.id=uid();
     a2.steps.splice(i+1,0,copy);
     save();rEd();
-  },'Duplica');
+  },t('duplicate'));
 }
 function selStep(i){if(dirty)saveStep(true);ST.editIdx=i;dirty=false;edMode('edit');rEdForm();rEdMini();}
-function markD(){if(!dirty){dirty=true;set('ed-st','Non salvato');}}
+function markD(){if(!dirty){dirty=true;set('ed-st',t('unsaved'));}}
 function saveStep(silent){
   save();dirty=false;
   if(!silent){ST.editIdx=null;kbdClose();edMode('grid');rEdGrid();}
@@ -2310,19 +2354,19 @@ function rEdForm(targetId){
 
   if(!inModal){
     const hd=mk('div','ef-h');
-    const sp=mk('span');sp.textContent='✏️ Step '+(ST.editIdx+1);hd.appendChild(sp);
-    const db=mk('button','bsm d');db.style.marginLeft='auto';db.textContent='🗑 Elimina';db.onclick=()=>delStep(ST.editIdx);hd.appendChild(db);
+    const sp=mk('span');sp.textContent='✏️ '+t('stepN')+' '+(ST.editIdx+1);hd.appendChild(sp);
+    const db=mk('button','bsm d');db.style.marginLeft='auto';db.textContent='🗑 '+t('delete');db.onclick=()=>delStep(ST.editIdx);hd.appendChild(db);
     f.appendChild(hd);
   }
 
   // ── Card 1: Nome ──
   const c1=mk('div','ef-card');
-  c1.appendChild(mkCardT('🏷️','Nome dello step'));
+  c1.appendChild(mkCardT('🏷️',t('stepName')));
   const NAME_MAX=40; // fits cleanly inside the small squares used in the strip/grid without overflowing
-  const i1=mk('input','inp');i1.type='text';i1.placeholder='es: Pranzo...';i1.value=s.label||'';i1.autocomplete='off';i1.setAttribute('inputmode','none');i1.maxLength=NAME_MAX;
+  const i1=mk('input','inp');i1.type='text';i1.placeholder=t('stepNamePh');i1.value=s.label||'';i1.autocomplete='off';i1.setAttribute('inputmode','none');i1.maxLength=NAME_MAX;
   const cnt1=mk('div','ef-count');
   const updCnt1=()=>{cnt1.textContent=i1.value.length+'/'+NAME_MAX;cnt1.classList.toggle('warn',i1.value.length>=NAME_MAX-5);};
-  i1.addEventListener('input',()=>{const x=curStep();if(x){x.label=i1.value;markD();curSave();if(inModal){set('stepedit-ttl','✏️ '+(x.label||'Step'));vRenderOverlay();}else rEdMini();}updCnt1();});
+  i1.addEventListener('input',()=>{const x=curStep();if(x){x.label=i1.value;markD();curSave();if(inModal){set('stepedit-ttl','✏️ '+(x.label||t('stepN')));vRenderOverlay();}else rEdMini();}updCnt1();});
   updCnt1();
   c1.appendChild(i1);
   c1.appendChild(cnt1);
@@ -2330,12 +2374,12 @@ function rEdForm(targetId){
 
   // ── Card 2: Modalità di visualizzazione ──
   const c2=mk('div','ef-card');
-  c2.appendChild(mkCardT('👁️','Come mostrarlo'));
+  c2.appendChild(mkCardT('👁️',t('howToShow')));
   const mr=mk('div','mrow mrow-modes');
   const modeInfo={
-    'image':   {lbl:'🖼️ Immagine',  hint:'Solo immagine, senza testo.'},
-    'text':    {lbl:'📝 Testo',     hint:'Solo il nome dello step, scritto grande — nessuna immagine (agenda testuale).'},
-    'image-text': {lbl:'🖼️+📝 Entrambe', hint:'Immagine e nome dello step insieme, ben visibili.'},
+    'image':   {lbl:'🖼️ '+t('modeImg'),  hint:t('modeImgHint')},
+    'text':    {lbl:'📝 '+t('modeTxt'),     hint:t('modeTxtHint')},
+    'image-text': {lbl:'🖼️+📝 '+t('modeBoth'), hint:t('modeBothHint')},
   };
   ['image','text','image-text'].forEach(mv=>{
     const b=mk('button','mbtn mbtn-mode'+(s.mode===mv?' on':''));b.textContent=modeInfo[mv].lbl;
@@ -2350,14 +2394,14 @@ function rEdForm(targetId){
   // ── Card 3: Immagine (solo se la modalità la prevede) ──
   if(s.mode!=='text'){
     const c3=mk('div','ef-card');
-    c3.appendChild(mkCardT('🖼️','Immagine'));
+    c3.appendChild(mkCardT('🖼️',t('modeImg')));
     const row=mk('div');row.style.cssText='display:flex;gap:14px;align-items:center;';
     // Pulsanti in colonna a sinistra, larghezza naturale
     const col=mk('div');col.style.cssText='display:flex;flex-direction:column;gap:7px;flex-shrink:0;';
-    const b1=mk('button','mbtn');b1.textContent='📁 Dispositivo';b1.onclick=()=>el('f-img').click();col.appendChild(b1);
+    const b1=mk('button','mbtn');b1.textContent='📁 '+t('device');b1.onclick=()=>el('f-img').click();col.appendChild(b1);
     const b2=mk('button','mbtn');b2.textContent='🔤 ARASAAC';b2.onclick=()=>openAr();col.appendChild(b2);
     if(s.img){
-      const rm=mk('button','bsm d');rm.textContent='✕ Rimuovi';
+      const rm=mk('button','bsm d');rm.textContent='✕ '+t('remove');
       rm.onclick=()=>{const x=curStep();if(x){x.img=null;curSave();curRerender();}};
       col.appendChild(rm);
     }
@@ -2377,7 +2421,7 @@ function rEdForm(targetId){
   const tb=mk('div','ef-card tbox');
   const tr=mk('div','tog-r');
   const tg=mk('div','tog'+(s.timer.on?' on':''));tr.appendChild(tg);
-  const tl=mk('span');tl.style.cssText='font-weight:800;font-size:.82rem';tl.textContent='⏱️ Timer';tr.appendChild(tl);
+  const tl=mk('span');tl.style.cssText='font-weight:800;font-size:.82rem';tl.textContent='⏱️ '+t('timer');tr.appendChild(tl);
   tr.onclick=()=>{const x=curStep();if(x){x.timer.on=!x.timer.on;curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx)editTimerForceLive=true;curRerender();}};
   tb.appendChild(tr);
   if(s.timer.on){
@@ -2385,7 +2429,7 @@ function rEdForm(targetId){
     const timerLeft=mk('div');timerLeft.style.cssText='display:flex;flex-direction:column;gap:8px;flex-shrink:0;';
     // tipo timer — riga orizzontale libera
     const tw2=mk('div','mrow');tw2.style.cssText='display:flex;gap:5px;';
-    [['ring','⭕','Anello'],['digital','🔢','Digitale'],['bar','▬','Barra'],['circle','🔵','Cerchio']].forEach(p=>{
+    [['ring','⭕',t('ring')],['digital','🔢',t('digital')],['bar','▬',t('bar')],['circle','🔵',t('circle')]].forEach(p=>{
       const b=mk('button','ttb'+(s.timer.type===p[0]?' on':''));
       const bi=mk('span');bi.style.fontSize='1rem';bi.textContent=p[1];b.appendChild(bi);
       const bl=mk('span');bl.style.cssText='font-size:.58rem;font-weight:800';bl.textContent=p[2];b.appendChild(bl);
@@ -2395,15 +2439,15 @@ function rEdForm(targetId){
     timerLeft.appendChild(tw2);
     // durata — riga orizzontale libera
     const dr=mk('div');dr.style.cssText='display:flex;gap:7px;align-items:flex-end;';
-    dr.appendChild(mkTSel('Ore',24,s.timer.h||0,v=>{const x=curStep();if(x){x.timer.h=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
+    dr.appendChild(mkTSel(t('hours'),24,s.timer.h||0,v=>{const x=curStep();if(x){x.timer.h=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
     dr.appendChild(mkColon());
-    dr.appendChild(mkTSel('Minuti',60,s.timer.m||0,v=>{const x=curStep();if(x){x.timer.m=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
+    dr.appendChild(mkTSel(t('minutes'),60,s.timer.m||0,v=>{const x=curStep();if(x){x.timer.m=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
     dr.appendChild(mkColon());
-    dr.appendChild(mkTSel('Secondi',60,s.timer.s||0,v=>{const x=curStep();if(x){x.timer.s=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
+    dr.appendChild(mkTSel(t('seconds'),60,s.timer.s||0,v=>{const x=curStep();if(x){x.timer.s=v;markD();curSave();if(viewEditIdx!==null&&viewEditIdx===VS.idx){editTimerForceLive=true;vRenderOverlay();}}}));
     const al=mk('label');al.style.cssText='display:flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;cursor:pointer;margin-bottom:6px;margin-left:8px';
     const ac=mk('input');ac.type='checkbox';ac.checked=!!s.timer.auto;
     ac.onchange=()=>{const x=curStep();if(x){x.timer.auto=ac.checked;curSave();}};
-    al.appendChild(ac);al.appendChild(document.createTextNode(' Auto-avanza'));
+    al.appendChild(ac);al.appendChild(document.createTextNode(' '+t('autoAdvance')));
     dr.appendChild(al);
     timerLeft.appendChild(dr);
     timerMain.appendChild(timerLeft);
@@ -2524,17 +2568,19 @@ function openAr(){
   const s=curStep();const l=s?.label||'';
   const q=(l&&!l.toLowerCase().startsWith('step'))?l:'';
   el('ar-q').value=q;
-  el('ar-r').innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">Inserisci un termine</div>';
+  el('ar-r').innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">'+t('enterSearchTerm')+'</div>';
   openM('m-ar');
   if(q)searchAr();
 }
 async function searchAr(){
   const q=el('ar-q').value.trim();if(!q)return;
-  const r=el('ar-r');r.innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">⏳ Ricerca...</div>';
+  const r=el('ar-r');r.innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">'+t('searching')+'</div>';
   try{
-    const res=await fetch('https://api.arasaac.org/v1/pictograms/it/search/'+encodeURIComponent(q));
+    const arLangMap={it:'it',en:'en',es:'es',uk:'en',ru:'en'};
+    const arLang=arLangMap[CFG.lang]||'en';
+    const res=await fetch('https://api.arasaac.org/v1/pictograms/'+arLang+'/search/'+encodeURIComponent(q));
     const data=await res.json();
-    if(!data.length){r.innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">Nessun risultato</div>';return;}
+    if(!data.length){r.innerHTML='<div style="color:var(--mut);font-size:.74rem;margin:auto">'+t('noResults')+'</div>';return;}
     r.innerHTML='';
     data.slice(0,30).forEach(it=>{
       const im=mk('img','ar-img');
@@ -2543,7 +2589,7 @@ async function searchAr(){
       im.onclick=()=>pickAr(im.src);
       r.appendChild(im);
     });
-  }catch(e){r.innerHTML='<div style="color:var(--red);font-size:.74rem;margin:auto">Errore connessione</div>';}
+  }catch(e){r.innerHTML='<div style="color:var(--red);font-size:.74rem;margin:auto">'+t('connError')+'</div>';}
 }
 async function pickAr(url){
   try{
@@ -2620,7 +2666,7 @@ function startViewer(uidArg,aidArg){
   const uid2=uidArg||el('use-u').dataset.val, aid=aidArg||el('use-a').dataset.val;
   if(!uid2||!aid)return;
   const u=gu(uid2), a=u?.agendas.find(x=>x.id===aid);
-  if(!a||!a.steps.length){alert('Agenda senza step!');return;}
+  if(!a||!a.steps.length){alert(t('agendaNoSteps'));return;}
   VS.steps=JSON.parse(JSON.stringify(a.steps));
   VS.idx=-1;VS.uid=uid2;VS.aid=aid;clearTi();
   set('v-t',u.name+' \u203a '+a.name);
@@ -2714,9 +2760,9 @@ function changePw(){
   const cur=el('pw-cur').value, n1=el('pw-new1').value, n2=el('pw-new2').value;
   const err=el('pw-chg-err'), ok=el('pw-chg-ok');
   ok.classList.add('hidden'); err.classList.add('hidden');
-  if(cur!==CFG.pw){ err.textContent='La password attuale non è corretta.'; err.classList.remove('hidden'); return; }
-  if(!n1.trim()){ err.textContent='Inserisci una nuova password.'; err.classList.remove('hidden'); return; }
-  if(n1!==n2){ err.textContent='Le due password non coincidono.'; err.classList.remove('hidden'); return; }
+  if(cur!==CFG.pw){ err.textContent=t('pwWrong'); err.classList.remove('hidden'); return; }
+  if(!n1.trim()){ err.textContent=t('pwEmpty'); err.classList.remove('hidden'); return; }
+  if(n1!==n2){ err.textContent=t('pwMismatch'); err.classList.remove('hidden'); return; }
   CFG.pw=n1;
   saveCfg();
   el('pw-cur').value='';el('pw-new1').value='';el('pw-new2').value='';
@@ -2746,7 +2792,7 @@ function rView(){
       const b=mk('div','vlc-b');
       let textPreview=null;
       if(s.mode!=='text'&&s.img){b.classList.add('has-img');const im=mk('img');im.src=s.img;b.appendChild(im);}
-      else if(s.mode==='text'){b.classList.add('is-txt');const t=mk('div','vlc-txt');t.textContent=s.label||'';b.appendChild(t);textPreview=t;}
+      else if(s.mode==='text'){b.classList.add('is-txt');const tx=mk('div','vlc-txt');tx.textContent=s.label||'';b.appendChild(tx);textPreview=tx;}
       else b.textContent='🖼️';
       const n=mk('div','vlc-n');n.textContent=i+1;b.appendChild(n);
       c.appendChild(b);
@@ -2773,12 +2819,12 @@ function rStrip(){
     const b=mk('div','vsq-b');
     let textPreview=null;
     if(s.mode!=='text'&&s.img){b.classList.add('has-img');const im=mk('img');im.src=s.img;b.appendChild(im);}
-    else if(s.mode==='text'){b.classList.add('is-txt');const t=mk('div','vsq-txt');t.textContent=s.label||'';b.appendChild(t);textPreview=t;}
+    else if(s.mode==='text'){b.classList.add('is-txt');const tx=mk('div','vsq-txt');tx.textContent=s.label||'';b.appendChild(tx);textPreview=tx;}
     else b.textContent='🖼️';
     if(viewEditMode){
-      const ed=mk('button','v-edit-btn sc-ed');ed.textContent='✏️';ed.title='Modifica';ed.onclick=ev=>{ev.stopPropagation();vOpenStepModal(i);};b.appendChild(ed);
-      const dpB=mk('button','v-edit-btn sc-dup');dpB.textContent='⧉';dpB.title='Duplica';dpB.onclick=ev=>{ev.stopPropagation();vDupStep(i);};b.appendChild(dpB);
-      const xB=mk('button','v-edit-btn sc-x');xB.textContent='✕';xB.title='Elimina';xB.onclick=ev=>{ev.stopPropagation();vDelStep(i);};b.appendChild(xB);
+      const ed=mk('button','v-edit-btn sc-ed');ed.textContent='✏️';ed.title=t('modify');ed.onclick=ev=>{ev.stopPropagation();vOpenStepModal(i);};b.appendChild(ed);
+      const dpB=mk('button','v-edit-btn sc-dup');dpB.textContent='⧉';dpB.title=t('duplicate');dpB.onclick=ev=>{ev.stopPropagation();vDupStep(i);};b.appendChild(dpB);
+      const xB=mk('button','v-edit-btn sc-x');xB.textContent='✕';xB.title=t('delete');xB.onclick=ev=>{ev.stopPropagation();vDelStep(i);};b.appendChild(xB);
       const hB=mk('div','v-edit-btn sc-h');hB.textContent='⠿';hB.title='Trascina per riordinare';b.appendChild(hB);
       e.draggable=true;
       e.addEventListener('dragstart',ev=>{ev.dataTransfer.setData('text/plain',String(i));setTimeout(()=>e.classList.add('dragging'),0);});
@@ -2824,9 +2870,9 @@ function rCur(opts){
     card.classList.toggle('v-editing',viewEditMode);
     card.onclick = viewEditMode ? null : ()=>tryNav('next');
     if(viewEditMode){
-      const ed=mk('button','v-edit-btn sc-ed');ed.textContent='✏️';ed.title='Modifica';ed.onclick=e=>{e.stopPropagation();vOpenStepModal(VS.idx);};card.appendChild(ed);
-      const dp2=mk('button','v-edit-btn sc-dup');dp2.textContent='⧉';dp2.title='Duplica';dp2.onclick=e=>{e.stopPropagation();vDupStep(VS.idx);};card.appendChild(dp2);
-      const x=mk('button','v-edit-btn sc-x');x.textContent='✕';x.title='Elimina';x.onclick=e=>{e.stopPropagation();vDelStep(VS.idx);};card.appendChild(x);
+      const ed=mk('button','v-edit-btn sc-ed');ed.textContent='✏️';ed.title=t('modify');ed.onclick=e=>{e.stopPropagation();vOpenStepModal(VS.idx);};card.appendChild(ed);
+      const dp2=mk('button','v-edit-btn sc-dup');dp2.textContent='⧉';dp2.title=t('duplicate');dp2.onclick=e=>{e.stopPropagation();vDupStep(VS.idx);};card.appendChild(dp2);
+      const x=mk('button','v-edit-btn sc-x');x.textContent='✕';x.title=t('delete');x.onclick=e=>{e.stopPropagation();vDelStep(VS.idx);};card.appendChild(x);
     }
   }
   vi.classList.add('hidden');vt.classList.add('hidden');
@@ -3346,11 +3392,11 @@ function tryNav(dir){
   if(dir==='next') nextStep(); else prevStep();
 }
 function pulseTimer(){
-  const t=el('v-timer');
-  if(!t || t.classList.contains('hidden'))return;
-  t.classList.remove('pulse');
-  void t.offsetWidth; // restart animation
-  t.classList.add('pulse');
+  const tw=el('v-timer');
+  if(!tw || tw.classList.contains('hidden'))return;
+  tw.classList.remove('pulse');
+  void tw.offsetWidth; // restart animation
+  tw.classList.add('pulse');
 }
 
 // Press-and-hold (2s) on Avanti/Indietro forces navigation even
@@ -3438,23 +3484,35 @@ function playAlarm(){
 }
 
 // ═══ SETTINGS ═══
-const rtOpts=[{v:'beep',t:'Bip classico'},{v:'bell',t:'Campanella'},{v:'chime',t:'Carillon'},{v:'alert',t:'Alert'}];
+function rtOptsGet(){return [{v:'beep',t:t('rt_beep')},{v:'bell',t:t('rt_bell')},{v:'chime',t:t('rt_chime')},{v:'alert',t:t('rt_alert')}];}
+let rtOpts=[];
 const sdOpts=[{v:'1',t:'1s'},{v:'2',t:'2s'},{v:'3',t:'3s'},{v:'5',t:'5s'}];
-function rtLabel(v){const o=rtOpts.find(x=>x.v===v);return o?o.t:v;}
+function rtLabel(v){rtOpts=rtOptsGet();const o=rtOpts.find(x=>x.v===v);return o?o.t:v;}
 function rSet(){
   el('s-rt').dataset.val=CFG.rt; set('s-rt-txt',rtLabel(CFG.rt));
   el('s-sd').dataset.val=String(CFG.sd); set('s-sd-txt',CFG.sd+'s');
   el('haptic-range').value=CFG.hapticInt;
   set('haptic-val',hapticLabel(CFG.hapticInt));
+  renderLangSettingsRow();
   applyTheme();
   applyTablet();
 }
+function renderLangSettingsRow(){
+  const row=el('lang-set-row');if(!row)return;
+  row.innerHTML='';
+  Object.keys(LANGS).forEach(code=>{
+    const b=mk('button','ba'+(CFG.lang===code?'':' off'));
+    b.textContent=LANGS[code];
+    b.onclick=()=>{ setLang(code); renderLangSettingsRow(); };
+    row.appendChild(b);
+  });
+}
 function hapticLabel(v){
   v=parseInt(v);
-  if(v<=0) return 'Disattivata';
-  if(v<=25) return 'Leggera';
-  if(v<=55) return 'Media';
-  return 'Forte';
+  if(v<=0) return t('hapticOff');
+  if(v<=25) return t('hapticLight');
+  if(v<=55) return t('hapticMed');
+  return t('hapticStrong');
 }
 function onHapticSlide(v){
   CFG.hapticInt=parseInt(v)||0;
@@ -3476,8 +3534,8 @@ function toggleTablet(){
 }
 function applyTablet(){
   document.documentElement.setAttribute('data-tablet',CFG.tablet?'on':'off');
-  const t=el('tablet-tog');
-  if(t) t.classList.toggle('on',!!CFG.tablet);
+  const tg=el('tablet-tog');
+  if(tg) tg.classList.toggle('on',!!CFG.tablet);
   // When switching back to phone mode, re-block the system keyboard
   // on every text field so the custom keyboard takes over again;
   // when switching to tablet mode, unblock them all immediately.
@@ -3507,13 +3565,13 @@ function impData(e){
       const d=JSON.parse(ev.target.result);
       if(d.ST){ST={...ST,...d.ST};save();}
       if(d.CFG){CFG={...CFG,...d.CFG};saveCfg();}
-      alert('✅ Importato!');rSet();rHome();
-    }catch(err){alert('❌ File non valido');}
+      alert(t('importSuccess'));rSet();rHome();
+    }catch(err){alert(t('invalidFile'));}
   };
   r.readAsText(f);e.target.value='';
 }
 function clearAll(){
-  confirm2('Eliminare TUTTI gli utenti e le agende?',()=>{
+  confirm2(t('confirmDeleteAllData'),()=>{
     ST.users=[];ST.selU=null;ST.selA=null;agSel=null;save();rHome();
   });
 }
@@ -3524,7 +3582,7 @@ function closeM(id){el(id).classList.add('hidden');kbdClose();}
 function confirm2(txt,cb,btnLbl){
   set('m-cf-t',txt);cfCb=cb;
   const b=el('m-cf-b');
-  b.textContent=btnLbl||'Elimina';
+  b.textContent=btnLbl||t('delete');
   b.className='bm '+(btnLbl?'ok':'dg');
   b.onclick=()=>{if(cfCb)cfCb();closeM('m-cf');};
   openM('m-cf');
@@ -3541,7 +3599,7 @@ document.querySelectorAll('.mov').forEach(m=>m.addEventListener('mousedown',e=>{
 let xPkOnPick=null;
 
 function xSelOpen(trigger, opts, onPick){
-  const label=trigger.dataset.label || 'Scegli';
+  const label=(trigger.dataset.i18nLabel ? t(trigger.dataset.i18nLabel) : trigger.dataset.label) || t('pickerChoose');
   el('xpk-h').textContent=label;
   const list=el('xpk-list');
   list.innerHTML='';
@@ -3566,13 +3624,36 @@ el('xpk-ov').addEventListener('mousedown',e=>{ if(e.target===el('xpk-ov')) xPkCl
 // Native keyboard would appear sideways (device orientation) and resize
 // the viewport, breaking the rotated stage. So we render our own.
 let kA=null, kShift=false, kCaps=false, kLayer='txt';
-const K_TXT=[
+const K_TXT_LATIN=[
   ['1','2','3','4','5','6','7','8','9','0'],
   ['q','w','e','r','t','y','u','i','o','p'],
   ['a','s','d','f','g','h','j','k','l'],
   [{k:'SH'},'z','x','c','v','b','n','m',{k:'DEL'}],
   [{k:'SY'},{k:'SP'},{k:'OK'}]
 ];
+// Standard ЙЦУКЕН layout, used for Russian.
+const K_TXT_RU=[
+  ['1','2','3','4','5','6','7','8','9','0'],
+  ['й','ц','у','к','е','н','г','ш','щ','з','х'],
+  ['ф','ы','в','а','п','р','о','л','д','ж','э'],
+  [{k:'SH'},'я','ч','с','м','и','т','ь','б','ю',{k:'DEL'}],
+  [{k:'SY'},{k:'SP'},{k:'OK'}]
+];
+// Standard Ukrainian layout — same base as ЙЦУКЕН but with і/ї/є
+// instead of the Russian-only и/ъ/э.
+const K_TXT_UK=[
+  ['1','2','3','4','5','6','7','8','9','0'],
+  ['й','ц','у','к','е','н','г','ш','щ','з','ї'],
+  ['ф','і','в','а','п','р','о','л','д','ж','є'],
+  [{k:'SH'},'я','ч','с','м','и','т','ь','б','ю',{k:'DEL'}],
+  [{k:'SY'},{k:'SP'},{k:'OK'}]
+];
+let K_TXT=K_TXT_LATIN;
+// Picks the on-screen keyboard's letter layout to match the current
+// language — Cyrillic for Russian/Ukrainian, Latin QWERTY otherwise.
+function buildKeyboardLayout(){
+  K_TXT = CFG.lang==='ru' ? K_TXT_RU : CFG.lang==='uk' ? K_TXT_UK : K_TXT_LATIN;
+}
 const K_SYM=[
   ['!','@','#','$','%','&','*','(',')','\u20ac'],
   ['-','_','+','=','/','\\','[',']','{','}'],
@@ -3665,7 +3746,7 @@ function kbdBuild(){
         b.textContent=kLayer==='sym'?'ABC':'!#\u20ac';
         kOn(b,()=>{kLayer=kLayer==='sym'?'txt':'sym';kbdBuild();});
       }else if(d.k==='SP'){
-        b.className='kk xw';b.textContent='Spazio';
+        b.className='kk xw';b.textContent=t('space');
         kOn(b,()=>kType(' '));
       }else if(d.k==='OK'){
         b.className='kk ok';b.textContent='OK ✓';
@@ -3766,12 +3847,12 @@ document.addEventListener('keydown',e=>{
 },true);
 
 // ═══ VERSION & UPDATES (PWA) ═══
-const APP_VERSION='3.1.0';
+const APP_VERSION='3.3.0';
 let swReg=null;
 
 function initVersionDisplay(){
   const l=el('app-ver-lbl'); if(l) l.textContent=APP_VERSION;
-  const t=el('tb-ver'); if(t) t.textContent='v'+APP_VERSION;
+  const vv=el('tb-ver'); if(vv) vv.textContent='v'+APP_VERSION;
 }
 
 function registerSW(){
@@ -3899,11 +3980,23 @@ document.addEventListener('click',e=>{
 });
 
 // ═══ INIT ═══
-load();applyTheme();applyTablet();rHome();initVersionDisplay();registerSW();updateLockIcon();
+load();applyTablet();initVersionDisplay();registerSW();updateLockIcon();
+if(!CFG.lang){
+  // First launch: show the language picker instead of Home.
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  el('s-lang').classList.add('on');
+  renderLangPicker();
+  applyTheme();
+} else {
+  applyI18n();
+  buildKeyboardLayout();
+  applyTheme();
+  rHome();
+}
 // "Usa Agenda" home-screen shortcut (long-press the app icon): if
 // opened via ?action=use, skip straight to the same flow as pressing
 // the big Usa Agenda button, then clean the URL.
-if(new URLSearchParams(location.search).get('action')==='use'){
+if(CFG.lang && new URLSearchParams(location.search).get('action')==='use'){
   goUse();
   history.replaceState(null,'',location.pathname);
 }
