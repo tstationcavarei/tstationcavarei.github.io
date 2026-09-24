@@ -1,8 +1,9 @@
 {
+  "id": "/",
   "name": "Agenda Visiva",
   "short_name": "Agenda Visiva",
   "description": "Agenda visiva per la pianificazione di attività quotidiane, pensata per l'uso in orizzontale su smartphone e tablet.",
-  "version": "1.0.1",
+  "version": "3.1.0",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
@@ -10,6 +11,7 @@
   "background_color": "#4A9EDB",
   "theme_color": "#4A9EDB",
   "lang": "it",
+  "categories": ["education", "lifestyle"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -34,6 +36,15 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Usa Agenda",
+      "short_name": "Usa Agenda",
+      "description": "Avvia subito una sessione, saltando la Home",
+      "url": "./index.html?action=use",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

@@ -1088,7 +1088,7 @@ html[data-tablet=on][data-theme=dark] .vctrl{
       <div class="instr-sect">
         <div class="instr-sect-t">🏠 Home</div>
         <p>In alto a destra: <b>ℹ️ Info</b> (queste istruzioni), <b>🔓/🔒 Lucchetto</b> (blocco con password), <b>⚙️ Impostazioni</b>. L'app resta sempre a schermo intero, senza bisogno di attivarlo manualmente.</p>
-        <p>Al centro, il grande pulsante verde <b>▶️ Usa Agenda</b> avvia subito una sessione. Sotto, due pulsanti più piccoli portano a <b>👤 Utenti</b> e <b>📋 Agende</b>, dove si creano e modificano i profili e le loro agende.</p>
+        <p>Al centro, il grande pulsante verde <b>▶️ Usa Agenda</b> avvia subito una sessione. Sotto, due pulsanti più piccoli portano a <b>👤 Utenti</b> e <b>📋 Agende</b>, dove si creano e modificano i profili e le loro agende. Se l'app è installata, tenendo premuta la sua icona compare una scorciatoia "Usa Agenda" che salta direttamente all'avvio della sessione.</p>
       </div>
       <div class="instr-sect">
         <div class="instr-sect-t">👤 Utenti</div>
@@ -1139,7 +1139,7 @@ html[data-tablet=on][data-theme=dark] .vctrl{
       </div>
     </div>
   </div>
-  <div class="home-ver" id="tb-ver">v3.0.0</div>
+  <div class="home-ver" id="tb-ver">v3.1.0</div>
 </div>
 
 <!-- USERS -->
@@ -3766,7 +3766,7 @@ document.addEventListener('keydown',e=>{
 },true);
 
 // ═══ VERSION & UPDATES (PWA) ═══
-const APP_VERSION='3.0.0';
+const APP_VERSION='3.1.0';
 let swReg=null;
 
 function initVersionDisplay(){
@@ -3900,6 +3900,13 @@ document.addEventListener('click',e=>{
 
 // ═══ INIT ═══
 load();applyTheme();applyTablet();rHome();initVersionDisplay();registerSW();updateLockIcon();
+// "Usa Agenda" home-screen shortcut (long-press the app icon): if
+// opened via ?action=use, skip straight to the same flow as pressing
+// the big Usa Agenda button, then clean the URL.
+if(new URLSearchParams(location.search).get('action')==='use'){
+  goUse();
+  history.replaceState(null,'',location.pathname);
+}
 // try locking landscape globally at first user interaction
 document.addEventListener('click',function once(){
   try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
